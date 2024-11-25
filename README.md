@@ -74,24 +74,19 @@ List initial dataset dapat diakses pada tautan berikut ->  [ristek.link/LokaKary
    - Mengelola data produk dan toko yang terdaftar di platform.
    - Memantau aktivitas pengguna dan memoderasi konten.
 
-## Langkah-Langkah Integrasi dengan Web Service
+## Panduan Integrasi dengan Web Service
 
-### 1. **Identifikasi Kebutuhan dan Perancangan Aplikasi**
-   Kami memulai dengan menentukan fitur utama yang harus disediakan oleh web service, seperti mengambil data produk dan validasi pengguna.  
-   Selanjutnya, kami mengidentifikasi format data yang digunakan, yakni JSON, dan mencatat endpoint yang disediakan oleh web service.
+### 1. **Desain dan Kebutuhan Aplikasi**
+   Fitur utama yang disediakan oleh web service antara lain adalah pengambilan data produk, informasi toko, serta validasi pengguna. Kami memilih format data JSON untuk komunikasi antar aplikasi dan server. Endpoint yang disediakan diidentifikasi dan dipetakan dengan kebutuhan aplikasi.
 
-### 2. **Konfigurasi dan Koneksi ke Web Service**
-   Data yang dikirim ke aplikasi Flutter adalah dalam format JSON. Ketika Flutter mengirim permintaan data ke server, Django akan mengirimkan respons dalam format JSON.  
-   Untuk koneksi, aplikasi Flutter menggunakan paket `http` untuk melakukan request ke endpoint yang sesuai di web service, dan menerima respons untuk diproses lebih lanjut.
+### 2. **Menghubungkan Aplikasi dengan Web Service**
+   Aplikasi Flutter akan mengirim permintaan HTTP kepada server Django, yang akan memberikan respons dalam format JSON. Kami menggunakan paket `http` di Flutter untuk melakukan request dan mendapatkan respons data.
 
-### 3. **Pengujian Proses Integrasi**
-   Sebelum menghubungkan web service ke aplikasi, kami menggunakan alat seperti Postman untuk menguji setiap endpoint dan memahami format responsnya.  
-   Pengujian dilakukan pada berbagai skenario, baik keberhasilan maupun kegagalan, untuk memastikan sistem siap digunakan. Kami memeriksa data yang dikirim, autentikasi, serta memastikan respons API sesuai dengan yang diharapkan.
+### 3. **Pengujian Web Service**
+   Sebelum mengintegrasikan dengan aplikasi, kami menggunakan Postman untuk menguji dan memverifikasi endpoint serta format data yang diterima dari server. Pengujian dilakukan pada berbagai skenario, termasuk kasus error dan validasi data.
 
-### 4. **Pengembangan User Interface**
-   Setelah integrasi teknis selesai, kami membuat antarmuka pengguna (UI/UX) untuk mengolah dan menampilkan data yang diperoleh dari web service secara intuitif dan interaktif.  
-   UI dirancang dengan memperhatikan pengalaman pengguna, memastikan tampilan produk, toko, dan informasi lainnya mudah diakses dan digunakan.
+### 4. **Pengembangan Antarmuka Pengguna**
+   Setelah integrasi selesai, UI dikembangkan dengan fokus pada pengalaman pengguna. Data dari web service ditampilkan secara dinamis dengan navigasi yang memudahkan pengguna untuk mengakses produk, toko, dan informasi lainnya.
 
 ### 5. **Deployment dan Pemantauan**
-   Kami memastikan koneksi ke web service tetap stabil saat aplikasi dijalankan.  
-   Performa web service, termasuk waktu respons dan error log, dipantau secara berkala untuk menjaga kelancaran operasional aplikasi. Kami juga menggunakan alat pemantauan untuk mendeteksi gangguan dan melakukan perbaikan jika diperlukan.
+   Koneksi ke web service terus dipantau untuk memastikan aplikasi berjalan dengan lancar. Kami memantau kinerja API dan waktu respons untuk memastikan sistem tidak terganggu.
