@@ -73,3 +73,25 @@ List initial dataset dapat diakses pada tautan berikut ->  [ristek.link/LokaKary
 3. *Admin*:
    - Mengelola data produk dan toko yang terdaftar di platform.
    - Memantau aktivitas pengguna dan memoderasi konten.
+
+## Langkah-Langkah Integrasi dengan Web Service
+
+### 1. **Identifikasi Kebutuhan dan Perancangan Aplikasi**
+   Kami memulai dengan menentukan fitur utama yang harus disediakan oleh web service, seperti mengambil data produk dan validasi pengguna.  
+   Selanjutnya, kami mengidentifikasi format data yang digunakan, yakni JSON, dan mencatat endpoint yang disediakan oleh web service.
+
+### 2. **Konfigurasi dan Koneksi ke Web Service**
+   Data yang dikirim ke aplikasi Flutter adalah dalam format JSON. Ketika Flutter mengirim permintaan data ke server, Django akan mengirimkan respons dalam format JSON.  
+   Untuk koneksi, aplikasi Flutter menggunakan paket `http` untuk melakukan request ke endpoint yang sesuai di web service, dan menerima respons untuk diproses lebih lanjut.
+
+### 3. **Pengujian Proses Integrasi**
+   Sebelum menghubungkan web service ke aplikasi, kami menggunakan alat seperti Postman untuk menguji setiap endpoint dan memahami format responsnya.  
+   Pengujian dilakukan pada berbagai skenario, baik keberhasilan maupun kegagalan, untuk memastikan sistem siap digunakan. Kami memeriksa data yang dikirim, autentikasi, serta memastikan respons API sesuai dengan yang diharapkan.
+
+### 4. **Pengembangan User Interface**
+   Setelah integrasi teknis selesai, kami membuat antarmuka pengguna (UI/UX) untuk mengolah dan menampilkan data yang diperoleh dari web service secara intuitif dan interaktif.  
+   UI dirancang dengan memperhatikan pengalaman pengguna, memastikan tampilan produk, toko, dan informasi lainnya mudah diakses dan digunakan.
+
+### 5. **Deployment dan Pemantauan**
+   Kami memastikan koneksi ke web service tetap stabil saat aplikasi dijalankan.  
+   Performa web service, termasuk waktu respons dan error log, dipantau secara berkala untuk menjaga kelancaran operasional aplikasi. Kami juga menggunakan alat pemantauan untuk mendeteksi gangguan dan melakukan perbaikan jika diperlukan.
