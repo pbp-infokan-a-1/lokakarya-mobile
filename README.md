@@ -149,4 +149,3 @@ List initial dataset dapat diakses pada tautan berikut ->  [ristek.link/LokaKary
 3. *Admin*:
    - Mengelola data produk dan toko yang terdaftar di platform.
    - Memantau aktivitas pengguna dan memoderasi konten.
->>>>>>> 7e66bd50324f59f6e7b0cad1005940c02dfa8ebc
