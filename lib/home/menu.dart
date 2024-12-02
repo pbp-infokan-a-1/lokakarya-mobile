@@ -29,6 +29,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
     // Navigate to Profile screen if the Profile tab is selected
     if (_selectedIndex == 1) {
+      // Handle Forum and Review navigation here
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Navigating to Forum and Review...")),
+      );
+    } else if (_selectedIndex == 2) {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const ProfileScreen()), // Navigate to Profile screen

@@ -22,12 +22,12 @@ class BubbleTabBar extends StatelessWidget {
           label: 'Home',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: 'User Profile',
-        ),
-        BottomNavigationBarItem(
           icon: Icon(Icons.forum),
           label: 'Forum & Review',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person),
+          label: 'User Profile',
         ),
       ],
     );

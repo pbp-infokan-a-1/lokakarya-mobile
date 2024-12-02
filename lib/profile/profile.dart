@@ -10,7 +10,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  int _selectedIndex = 1; // Profile is selected by default
+  int _selectedIndex = 2; // Profile is selected by default
 
   // Handle tab changes
   void _onTabChange(int index) {
@@ -25,12 +25,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         MaterialPageRoute(builder: (context) => MyHomePage()), // Navigate to Home
       );
     } else if (_selectedIndex == 1) {
-      // Stay on the profile screen
-    } else if (_selectedIndex == 2) {
       // Handle Forum and Review navigation here
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Navigating to Forum and Review...")),
       );
+    } else if (_selectedIndex == 2) {
+      // Stay on the profile screen
     }
   }
 
