@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lokakarya_mobile/home/widgets/bubbletab.dart'; // Import the BubbleTabBar widget
+import 'package:lokakarya_mobile/product_page/screens/list_products.dart'; // Import the Profile screen
 import 'package:lokakarya_mobile/profile/profile.dart'; // Import the Profile screen
 
 class MyHomePage extends StatefulWidget {
@@ -31,7 +32,16 @@ class _MyHomePageState extends State<MyHomePage> {
     if (_selectedIndex == 1) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const ProfileScreen()), // Navigate to Profile screen
+        MaterialPageRoute(
+            builder: (context) =>
+                const ProfileScreen()), // Navigate to Profile screen
+      );
+    } else if (_selectedIndex == 2) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                const ProductEntryPage()), // Navigate to Profile screen
       );
     }
   }
@@ -94,7 +104,8 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       bottomNavigationBar: BubbleTabBar(
-        selectedIndex: _selectedIndex, // Pass the selected index to highlight the active tab
+        selectedIndex:
+            _selectedIndex, // Pass the selected index to highlight the active tab
         onTabChange: _onTabChange, // Pass the callback to handle tab change
       ),
     );
@@ -150,9 +161,7 @@ class ItemCard extends StatelessWidget {
         onTap: () {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(content: Text("You tapped ${item.name}!"))
-            );
+            ..showSnackBar(SnackBar(content: Text("You tapped ${item.name}!")));
         },
         child: Container(
           padding: const EdgeInsets.all(8),

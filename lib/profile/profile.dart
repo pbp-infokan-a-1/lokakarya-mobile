@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lokakarya_mobile/home/widgets/bubbletab.dart'; // Import the BubbleTabBar widget
 import 'package:lokakarya_mobile/home/menu.dart'; // Import the Menu (Home) screen for other tab navigation
+import 'package:lokakarya_mobile/home/widgets/bubbletab.dart'; // Import the BubbleTabBar widget
+import 'package:lokakarya_mobile/product_page/screens/list_products.dart'; // Import the Menu (Home) screen for other tab navigation
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -22,14 +23,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (_selectedIndex == 0) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => MyHomePage()), // Navigate to Home
+        MaterialPageRoute(
+            builder: (context) => MyHomePage()), // Navigate to Home
       );
     } else if (_selectedIndex == 1) {
       // Stay on the profile screen
     } else if (_selectedIndex == 2) {
       // Handle Forum and Review navigation here
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => const ProductEntryPage()), // Navigate to Home
+      );
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Navigating to Forum and Review...")),
+        const SnackBar(content: Text("Navigating to Products...")),
       );
     }
   }
@@ -73,7 +80,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
       bottomNavigationBar: BubbleTabBar(
-        selectedIndex: _selectedIndex, // Pass the selected index to the BubbleTabBar
+        selectedIndex:
+            _selectedIndex, // Pass the selected index to the BubbleTabBar
         onTabChange: _onTabChange, // Handle the tab change here
       ),
     );

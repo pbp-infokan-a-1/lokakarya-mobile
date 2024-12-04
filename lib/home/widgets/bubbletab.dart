@@ -1,4 +1,3 @@
-// bubbletab.dart
 import 'package:flutter/material.dart';
 
 class BubbleTabBar extends StatelessWidget {
@@ -16,6 +15,12 @@ class BubbleTabBar extends StatelessWidget {
     return BottomNavigationBar(
       currentIndex: selectedIndex,
       onTap: onTabChange,
+      selectedItemColor:
+          Colors.black, // Set the selected icon and label color to black
+      unselectedItemColor:
+          Colors.black, // Set the unselected icon and label color to black
+      showSelectedLabels: true, // Ensure labels are displayed
+      showUnselectedLabels: true, // Ensure unselected labels are displayed
       items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
@@ -24,6 +29,10 @@ class BubbleTabBar extends StatelessWidget {
         BottomNavigationBarItem(
           icon: Icon(Icons.person),
           label: 'User Profile',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.shopping_bag),
+          label: 'Products',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.forum),
