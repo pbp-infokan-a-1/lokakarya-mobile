@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lokakarya_mobile/home/widgets/bubbletab.dart'; // Import the BubbleTabBar widget
 import 'package:lokakarya_mobile/profile/profile.dart'; // Import the Profile screen
+import 'package:provider/provider.dart';
+import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
+import 'package:lokakarya_mobile/auth/screens/login.dart';
+import 'package:lokakarya_mobile/home/widgets/mood_card.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({super.key});
@@ -27,22 +31,35 @@ class _MyHomePageState extends State<MyHomePage> {
       _selectedIndex = index;
     });
 
-    // Navigate to Profile screen if the Profile tab is selected
-    if (_selectedIndex == 1) {
-      // Handle Forum and Review navigation here
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    
+    if (!authProvider.isAuthenticated && index > 0) {
+      // If not authenticated and trying to access protected tabs
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginPage()),
+      );
+      return;
+    }
+
+    // Handle navigation for authenticated users
+    if (index == 1) {
+      // Handle Forum and Review navigation
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Navigating to Forum and Review...")),
       );
-    } else if (_selectedIndex == 2) {
+    } else if (index == 2) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const ProfileScreen()), // Navigate to Profile screen
+        MaterialPageRoute(builder: (context) => const ProfileScreen()),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -99,8 +116,9 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       bottomNavigationBar: BubbleTabBar(
-        selectedIndex: _selectedIndex, // Pass the selected index to highlight the active tab
-        onTabChange: _onTabChange, // Pass the callback to handle tab change
+        selectedIndex: _selectedIndex,
+        onTabChange: _onTabChange,
+        isAuthenticated: authProvider.isAuthenticated,
       ),
     );
   }
@@ -134,53 +152,3 @@ class InfoCard extends StatelessWidget {
   }
 }
 
-class ItemHomepage {
-  final String name;
-  final IconData icon;
-
-  ItemHomepage(this.name, this.icon);
-}
-
-class ItemCard extends StatelessWidget {
-  final ItemHomepage item;
-
-  const ItemCard(this.item, {super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Theme.of(context).colorScheme.secondary,
-      borderRadius: BorderRadius.circular(12),
-      child: InkWell(
-        onTap: () {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(content: Text("You tapped ${item.name}!"))
-            );
-        },
-        child: Container(
-          padding: const EdgeInsets.all(8),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  item.icon,
-                  color: Colors.white,
-                  size: 30.0,
-                ),
-                const Padding(padding: EdgeInsets.all(3)),
-                Text(
-                  item.name,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
