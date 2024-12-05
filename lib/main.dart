@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lokakarya_mobile/storepage.dart';
+
 
 void main() {
   runApp(const MyApp());
