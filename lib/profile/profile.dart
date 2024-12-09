@@ -1,48 +1,57 @@
 import 'package:flutter/material.dart';
-import 'package:lokakarya_mobile/home/menu.dart'; // Import the Menu (Home) screen for other tab navigation
-import 'package:lokakarya_mobile/home/widgets/bubbletab.dart'; // Import the BubbleTabBar widget
-import 'package:lokakarya_mobile/product_page/screens/list_products.dart'; // Import the Menu (Home) screen for other tab navigation
+import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
+import 'package:lokakarya_mobile/auth/screens/login.dart';
+import 'package:lokakarya_mobile/home/menu.dart';
+import 'package:lokakarya_mobile/home/widgets/bubbletab.dart';
+import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
   @override
-  _ProfileScreenState createState() => _ProfileScreenState();
+  State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  int _selectedIndex = 1; // Profile is selected by default
+  int _selectedIndex = 2; // Profile tab index
 
-  // Handle tab changes
   void _onTabChange(int index) {
     setState(() {
       _selectedIndex = index;
     });
 
-    // Navigate to the corresponding screen based on the selected tab
-    if (_selectedIndex == 0) {
+    // Navigate to Home if home tab is selected
+    if (index == 0) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-            builder: (context) => MyHomePage()), // Navigate to Home
+        MaterialPageRoute(builder: (context) => MyHomePage()),
       );
-    } else if (_selectedIndex == 1) {
-      // Stay on the profile screen
-    } else if (_selectedIndex == 2) {
-      // Handle Forum and Review navigation here
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => const ProductEntryPage()), // Navigate to Home
-      );
+    } else if (index == 1) {
+      // Handle Forum navigation
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Navigating to Products...")),
+        const SnackBar(content: Text("Navigating to Forum and Review...")),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+
+    if (!authProvider.isAuthenticated) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginPage()),
+        );
+      });
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -60,7 +69,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 20),
-            // Display the content for the profile screen
             Center(
               child: Column(
                 children: const [
@@ -80,9 +88,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
       bottomNavigationBar: BubbleTabBar(
-        selectedIndex:
-            _selectedIndex, // Pass the selected index to the BubbleTabBar
-        onTabChange: _onTabChange, // Handle the tab change here
+        selectedIndex: _selectedIndex,
+        onTabChange: _onTabChange,
+        isAuthenticated: authProvider.isAuthenticated,
       ),
     );
   }
