@@ -54,57 +54,57 @@ class _AdminDashboardState extends State<AdminDashboard> {
         backgroundColor: Colors.blueAccent,
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Products',
-                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 10),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: products.length,
-                      itemBuilder: (context, index) {
-                        final product = products[index];
-                        return Card(
-                          child: ListTile(
-                            title: Text(product['name']),
-                            subtitle: Text(
-                                'Min Price: ${product['min_price']} | Max Price: ${product['max_price']}'),
-                            trailing: Text('Reviews: ${product['num_reviews']}'),
-                          ),
-                        );
-                      },
-                    ),
-                    SizedBox(height: 20),
-                    Text(
-                      'Categories',
-                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 10),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: categories.length,
-                      itemBuilder: (context, index) {
-                        final category = categories[index];
-                        return Card(
-                          child: ListTile(
-                            title: Text(category['name']),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
+      ? Center(child: CircularProgressIndicator())
+      : SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Products',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
-            ),
+              SizedBox(height: 10),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: products.length,
+                itemBuilder: (context, index) {
+                  final product = products[index];
+                  return Card(
+                    child: ListTile(
+                      title: Text(product['name']),
+                      subtitle: Text(
+                          'Min Price: ${product['min_price']} | Max Price: ${product['max_price']}'),
+                      trailing: Text('Reviews: ${product['num_reviews']}'),
+                    ),
+                  );
+                },
+              ),
+              SizedBox(height: 20),
+              Text(
+                'Categories',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 10),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: categories.length,
+                itemBuilder: (context, index) {
+                  final category = categories[index];
+                  return Card(
+                    child: ListTile(
+                      title: Text(category['name']),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
