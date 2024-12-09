@@ -3,6 +3,7 @@ import 'package:lokakarya_mobile/home/menu.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
+import 'package:lokakarya_mobile/admin_dashboard/admin_dashboard.dart';
 
 void main() {
   runApp(
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
             primarySwatch: Colors.deepPurple,
           ).copyWith(secondary: Colors.deepPurple[400]),
         ),
-        home: MyHomePage(),
+        home: AdminDashboard(),
       ),
     );
   }
