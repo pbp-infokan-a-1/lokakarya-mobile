@@ -91,3 +91,40 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+  fonts:
+    - family: Caruban
+      fonts:
+        - asset: assets/fonts/Caruban-EBK8.ttf
+    - family: TTMoons
+      fonts:
+        - asset: assets/fonts/TT Moons Trial Black.otf
+    - family: TTMoonsThin
+      fonts:
+        - asset: assets/fonts/TT Moons Trial Thin.otf
+    - family: TommySoftMedium
+      fonts:
+        - asset: assets/fonts/tommy-soft-medium.otf
+    - family: TommySoftBold
+      fonts:
+        - asset: assets/fonts/tommy-soft-bold.otf
+    - family: Galey
+      fonts:
+        - asset: assets/fonts/galey.ttf
+    - family: GaleySemibold
+      fonts:
+        - asset: assets/fonts/galey_semibold.ttf
+    - family: Mont
+      fonts:
+        - asset: assets/fonts/mont.otf
+    - family: Cabin
+      fonts:
+        - asset: assets/fonts/cabin.ttf
+    - family: CabinSemi
+      fonts:
+        - asset: assets/fonts/cabin-semibold.ttf
+
+  assets:
+    - assets/images/background_auth.jpg
+    - assets/images/logo_lokakarya.png
+    - assets/images/bg_login.jpg

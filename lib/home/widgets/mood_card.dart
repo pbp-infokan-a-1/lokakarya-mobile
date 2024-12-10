@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
-import 'package:lokakarya_mobile/auth/screens/login.dart';
+import 'package:lokakarya_mobile/auth/screens/auth_screen.dart';
 import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
+import 'package:lokakarya_mobile/home/menu.dart';
 
 class ItemHomepage {
   final String name;
@@ -30,7 +31,7 @@ class ItemCard extends StatelessWidget {
               if (item.name == "Logout") {
                 try {
                   final response = await request.logout(
-                      "http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/auth/logout_app/");
+                      "http://127.0.0.1:8000/auth/logout_app/");
                   
                   if (context.mounted) {
                     if (response['status']) {
@@ -44,7 +45,7 @@ class ItemCard extends StatelessWidget {
                       );
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => const LoginPage()),
+                        MaterialPageRoute(builder: (context) => MyHomePage()),
                       );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
