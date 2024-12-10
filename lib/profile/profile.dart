@@ -30,7 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
 
       final response = await request.get(
-        'https://belva-ghani-lokakarya.pbp.cs.ui.ac.id/userprofile/show-json/',
+        'http://127.0.0.1:8000/userprofile/show-json/',
       );
       
       print("Response: $response");
