@@ -15,8 +15,11 @@ class BubbleTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Ensure selected index is valid
+    final validIndex = selectedIndex < (isAuthenticated ? 3 : 2) ? selectedIndex : 0;
+    
     return BottomNavigationBar(
-      currentIndex: selectedIndex,
+      currentIndex: validIndex,
       onTap: onTabChange,
       items: isAuthenticated
           ? const [

@@ -19,28 +19,37 @@ class _MyHomePageState extends State<MyHomePage> {
   final String npm = '5000000000'; // NPM
   final String name = 'Gedagedi Gedagedago'; // Nama
   final String className = 'PBP S'; // Kelas
-  final List<ItemHomepage> items = [
-    ItemHomepage("Lihat Mood", Icons.mood),
-    ItemHomepage("Tambah Mood", Icons.add),
-    ItemHomepage("Logout", Icons.logout),
-  ];
+
+  List<ItemHomepage> getItems(bool isAuthenticated) {
+    List<ItemHomepage> items = [
+      ItemHomepage("Lihat Mood", Icons.mood),
+      ItemHomepage("Tambah Mood", Icons.add),
+    ];
+    
+    // Only add logout option if user is authenticated
+    if (isAuthenticated) {
+      items.add(ItemHomepage("Logout", Icons.logout));
+    }
+    
+    return items;
+  }
 
   // Function to handle tab changes
   void _onTabChange(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     
+    // If not authenticated and trying to access protected tabs
     if (!authProvider.isAuthenticated && index > 0) {
-      // If not authenticated and trying to access protected tabs
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const LoginPage()),
       );
       return;
     }
+
+    setState(() {
+      _selectedIndex = index;
+    });
 
     // Handle navigation for authenticated users
     if (index == 1) {
@@ -59,6 +68,12 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
+    final items = getItems(authProvider.isAuthenticated);  // Get items based on auth state
+    
+    // Reset index to 0 if current index is invalid
+    if (_selectedIndex >= (authProvider.isAuthenticated ? 3 : 2)) {
+      _selectedIndex = 0;
+    }
     
     return Scaffold(
       appBar: AppBar(
@@ -103,7 +118,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     padding: const EdgeInsets.all(20),
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
-                    crossAxisCount: 3,
+                    crossAxisCount: MediaQuery.of(context).size.width > 600 ? 4 : 3,
+                    childAspectRatio: 1,
                     shrinkWrap: true,
                     children: items.map((ItemHomepage item) {
                       return ItemCard(item);
