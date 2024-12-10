@@ -112,8 +112,15 @@ class _LoginPageState extends State<LoginPage> {
                       if (request.loggedIn) {
                         String message = response['message'];
                         String uname = response['username'];
+                        String sessionId = response['sessionid'];  // Get the session ID
                         if (context.mounted) {
                           Provider.of<AuthProvider>(context, listen: false).setAuthenticated(true);
+                          
+                          // Store both username and session ID
+                          request.jsonData['username'] = uname;
+                          request.jsonData['sessionid'] = sessionId;  // Store the session ID
+                          
+                          await Future.delayed(const Duration(milliseconds: 500));
                           
                           Navigator.pushReplacement(
                             context,
