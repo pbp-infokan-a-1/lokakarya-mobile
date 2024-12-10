@@ -246,22 +246,22 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(height: 24),
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushReplacement(
+                    Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => const LoginPage()),
                     );
                   },
                   child: RichText(
                     text: TextSpan(
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontFamily: 'Cabin',
                         fontSize: 16,
-                        color: Colors.grey.shade700,
+                        color: Colors.white,
                       ),
                       children: const [
                         TextSpan(text: "Already have an account? "),
                         TextSpan(
-                          text: 'Login',
+                          text: 'Sign In!',
                           style: TextStyle(
                             color: Color(0xFF8B4513),
                             fontWeight: FontWeight.bold,

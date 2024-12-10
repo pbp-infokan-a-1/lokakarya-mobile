@@ -246,15 +246,15 @@ class _LoginPageState extends State<LoginPage> {
                   },
                   child: RichText(
                     text: TextSpan(
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontFamily: 'Cabin',
                         fontSize: 16,
-                        color: Colors.grey.shade700,
+                        color: Colors.white,
                       ),
                       children: const [
                         TextSpan(text: "Don't have an account? "),
                         TextSpan(
-                          text: 'Register',
+                          text: 'Sign Up!',
                           style: TextStyle(
                             color: Color(0xFF8B4513),
                             fontWeight: FontWeight.bold,

@@ -7,6 +7,7 @@ import 'package:lokakarya_mobile/auth/screens/login.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:lokakarya_mobile/profile/models/profile_model.dart';
 import 'dart:convert';
+import 'package:lokakarya_mobile/widgets/left_drawer.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -60,7 +61,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       );
     } else if (index == 1) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Navigating to Forum and Review...")),
+        const SnackBar(content: Text("[FEATURE] Forum & Review isn't implemented yet")),
       );
     }
   }
@@ -95,6 +96,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
+      drawer: const LeftDrawer(),
       body: FutureBuilder(
         future: fetchProfile(request),
         builder: (context, AsyncSnapshot<List<ProfileModel>> snapshot) {
