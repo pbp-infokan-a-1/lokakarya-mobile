@@ -232,32 +232,32 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 24),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const RegisterPage()),
-                    );
-                  },
-                  child: RichText(
-                    text: TextSpan(
-                      style: const TextStyle(
-                        fontFamily: 'Cabin',
-                        fontSize: 16,
-                        color: Colors.white,
-                      ),
-                      children: const [
-                        TextSpan(text: "Don't have an account? "),
-                        TextSpan(
-                          text: 'Sign Up!',
-                          style: TextStyle(
-                            color: Color(0xFF8B4513),
-                            fontWeight: FontWeight.bold,
+                        const SizedBox(height: 16),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const RegisterPage()),
+                            );
+                          },
+                          child: RichText(
+                            text: TextSpan(
+                              style: const TextStyle(
+                                fontFamily: 'Cabin',
+                                fontSize: 16,
+                                color: Colors.grey,
+                              ),
+                              children: const [
+                                TextSpan(text: "Don't have an account? "),
+                                TextSpan(
+                                  text: 'Sign Up!',
+                                  style: TextStyle(
+                                    color: Color(0xFF8B4513),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],

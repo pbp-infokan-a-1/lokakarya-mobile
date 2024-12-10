@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
 import 'package:lokakarya_mobile/auth/screens/auth_screen.dart';
 import 'package:lokakarya_mobile/home/widgets/bubbletab.dart';
-import 'package:lokakarya_mobile/profile/profile.dart';
+import 'package:lokakarya_mobile/profile/screens/profile.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({super.key});
