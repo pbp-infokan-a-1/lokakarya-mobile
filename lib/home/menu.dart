@@ -3,7 +3,7 @@ import 'package:lokakarya_mobile/home/widgets/bubbletab.dart'; // Import the Bub
 import 'package:lokakarya_mobile/profile/profile.dart'; // Import the Profile screen
 import 'package:provider/provider.dart';
 import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
-import 'package:lokakarya_mobile/auth/screens/login.dart';
+import 'package:lokakarya_mobile/auth/screens/auth_screen.dart';
 import 'package:lokakarya_mobile/home/widgets/mood_card.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -42,7 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (!authProvider.isAuthenticated && index > 0) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const LoginPage()),
+        MaterialPageRoute(builder: (context) => const AuthScreen()),
       );
       return;
     }
