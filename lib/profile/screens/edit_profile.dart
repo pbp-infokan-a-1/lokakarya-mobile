@@ -97,129 +97,137 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Bio Section
-                      const Text(
-                        'Bio',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF8B4513),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(15),
-                          border: Border.all(color: Colors.grey.shade300),
-                        ),
-                        child: TextField(
-                          controller: _bioController,
-                          maxLines: 4,
-                          decoration: const InputDecoration(
-                            hintText: 'Tell us about yourself',
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.all(16),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Bio Section
+                        const Text(
+                          'Bio',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF8B4513),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 24),
-
-                      // Location Section
-                      const Text(
-                        'Location',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF8B4513),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(15),
-                          border: Border.all(color: Colors.grey.shade300),
-                        ),
-                        child: TextField(
-                          controller: _locationController,
-                          decoration: const InputDecoration(
-                            hintText: 'Enter your location',
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.all(16),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-
-                      // Birth Date Section
-                      const Text(
-                        'Birth Date',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF8B4513),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      InkWell(
-                        onTap: () => _selectDate(context),
-                        child: Container(
-                          padding: const EdgeInsets.all(16),
+                        const SizedBox(height: 8),
+                        Container(
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(15),
                             border: Border.all(color: Colors.grey.shade300),
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "${_selectedDate.toLocal()}".split(' ')[0],
-                                style: const TextStyle(fontSize: 16),
-                              ),
-                              const Icon(Icons.calendar_today, color: Color(0xFF8B4513)),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-
-                      // Private Account Toggle
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Private Account',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF8B4513),
+                          child: TextField(
+                            controller: _bioController,
+                            maxLines: 4,
+                            decoration: const InputDecoration(
+                              hintText: 'Tell us about yourself',
+                              border: InputBorder.none,
+                              contentPadding: EdgeInsets.all(16),
                             ),
                           ),
-                          Switch(
-                            value: _isPrivate,
-                            onChanged: (bool value) {
-                              setState(() {
-                                _isPrivate = value;
-                              });
-                            },
-                            activeColor: const Color(0xFF8B4513),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 32),
+                        ),
+                        const SizedBox(height: 24),
 
-                      // Save Button
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            if (_formKey.currentState!.validate()) {
+                        // Location Section
+                        const Text(
+                          'Location',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF8B4513),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(color: Colors.grey.shade300),
+                          ),
+                          child: TextField(
+                            controller: _locationController,
+                            decoration: const InputDecoration(
+                              hintText: 'Enter your location',
+                              border: InputBorder.none,
+                              contentPadding: EdgeInsets.all(16),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+
+                        // Birth Date Section
+                        const Text(
+                          'Birth Date',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF8B4513),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        InkWell(
+                          onTap: () => _selectDate(context),
+                          child: Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(color: Colors.grey.shade300),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "${_selectedDate.toLocal()}".split(' ')[0],
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                                const Icon(Icons.calendar_today, color: Color(0xFF8B4513)),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+
+                        // Private Account Toggle
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Private Account',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF8B4513),
+                              ),
+                            ),
+                            Switch(
+                              value: _isPrivate,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  _isPrivate = value;
+                                });
+                              },
+                              activeColor: const Color(0xFF8B4513),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 32),
+
+                        // Save Button
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () async {
                               try {
+                                print('Sending data: ${jsonEncode({
+                                  'bio': _bioController.text,
+                                  'location': _locationController.text,
+                                  'birth_date': _selectedDate.toIso8601String().split('T')[0],
+                                  'private': _isPrivate,
+                                  'user': widget.profile.fields.user,
+                                })}');
                                 final response = await request.post(
                                   'http://127.0.0.1:8000/userprofile/profile/${request.jsonData['username']}/update_app/',
                                   jsonEncode({
@@ -227,6 +235,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     'location': _locationController.text,
                                     'birth_date': _selectedDate.toIso8601String().split('T')[0],
                                     'private': _isPrivate,
+                                    'user': widget.profile.fields.user,
                                   }),
                                 );
 
@@ -245,35 +254,47 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       ),
                                     );
                                   }
+                                } else {
+                                  if (context.mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(response['message'] ?? 'Failed to update profile'),
+                                        backgroundColor: Colors.red,
+                                      ),
+                                    );
+                                  }
                                 }
                               } catch (e) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text('Error updating profile: $e'),
-                                    backgroundColor: Colors.red,
-                                  ),
-                                );
+                                print('Error updating profile: $e');
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Error updating profile: $e'),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                }
                               }
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF8B4513),
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF8B4513),
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
                             ),
-                          ),
-                          child: const Text(
-                            'Save Changes',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontFamily: 'GaleySemibold',
+                            child: const Text(
+                              'Save Changes',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontFamily: 'GaleySemibold',
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
