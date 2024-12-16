@@ -30,6 +30,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  shared_preferences: ^2.0.9
+  cached_network_image: ^3.2.3
+  flutter_dotenv: ^5.0.2
+  intl: ^0.17.0
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -38,6 +42,7 @@ dependencies:
   provider: ^6.1.2
   pbp_django_auth: ^0.4.0
   http: ^1.2.2
+  carousel_slider: ^4.2.1
 
 dev_dependencies:
   flutter_test:
@@ -128,3 +133,19 @@ flutter:
     - assets/images/background_auth.jpg
     - assets/images/logo_lokakarya.png
     - assets/images/bg_login.jpg
+    - assets/images/promo1.png
+    - assets/images/promo2.png
+    - assets/images/activity1.png
+    - assets/images/activity2.png
+    - assets/images/activity3.png
+    - assets/images/aksesoris.jpg
+    - assets/images/fashion.jpg
+    - assets/images/anyaman_bambu.jpeg
+    - assets/images/batik_jepara.jpg
+    - assets/images/cenderamata.jpg
+    - assets/images/mahaeswari-craft.jpg
+    - assets/images/patung.jpg
+    - assets/images/tenun-unsiyyah.jpeg
+    - assets/images/toko-adhesi-monel.jpg
+    - assets/images/ukiran_kayu.jpg
+    - assets/images/keramik.jpg
