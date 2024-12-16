@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:lokakarya_mobile/widgets/left_drawer.dart';
-import 'package:provider/provider.dart';
 import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
 import 'package:lokakarya_mobile/auth/screens/auth_screen.dart';
 import 'package:lokakarya_mobile/home/widgets/bubbletab.dart';
+import 'package:lokakarya_mobile/product_page/screens/list_products.dart';
 import 'package:lokakarya_mobile/profile/screens/profile.dart';
+import 'package:lokakarya_mobile/widgets/left_drawer.dart';
+import 'package:provider/provider.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({super.key});
@@ -34,7 +35,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _onTabChange(int index) {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    
+
     // If not authenticated and trying to access protected tabs
     if (!authProvider.isAuthenticated && index > 0) {
       Navigator.push(
@@ -49,10 +50,23 @@ class _MyHomePageState extends State<MyHomePage> {
     });
 
     // Handle navigation for authenticated users
-    if (index == 2) {  // Profile tab
-      Navigator.pushReplacement(  // Changed from push to pushReplacement
+    if (index == 3) {
+      // Profile tab
+      Navigator.pushReplacement(
+        // Changed from push to pushReplacement
         context,
         MaterialPageRoute(builder: (context) => const ProfileScreen()),
+      );
+    } else if (index == 1) {
+      // Product tab
+      // ScaffoldMessenger.of(context)
+      //   ..hideCurrentSnackBar  ()
+      //   ..showSnackBar(const SnackBar(
+      //       content: Text("[FEATURE] Product Page isn't implemented yet")));
+      Navigator.pushReplacement(
+        // Changed from push to pushReplacement
+        context,
+        MaterialPageRoute(builder: (context) => const ProductEntryPage()),
       );
     }
   }
@@ -64,8 +78,8 @@ class _MyHomePageState extends State<MyHomePage> {
         onTap: () {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
-            ..showSnackBar(
-                SnackBar(content: Text("[FEATURE] $title isn't implemented yet")));
+            ..showSnackBar(SnackBar(
+                content: Text("[FEATURE] $title isn't implemented yet")));
         },
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -626,7 +640,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -814,4 +828,3 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-

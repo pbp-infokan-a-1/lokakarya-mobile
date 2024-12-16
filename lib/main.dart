@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
 import 'package:lokakarya_mobile/home/menu.dart';
+import 'package:lokakarya_mobile/product_page/provider/product_entry_provider.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
-import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
 
 void main() {
   runApp(
@@ -15,6 +16,7 @@ void main() {
             return request;
           },
         ),
+        ChangeNotifierProvider(create: (context) => ProductEntryProvider()),
       ],
       child: const MyApp(),
     ),
@@ -48,8 +50,7 @@ class MyApp extends StatelessWidget {
           bodyMedium: TextStyle(fontFamily: 'Cabin'),
         ),
       ),
-      home: MyHomePage(),  // Start with menu screen
+      home: MyHomePage(), // Start with menu screen
     );
   }
 }
-
