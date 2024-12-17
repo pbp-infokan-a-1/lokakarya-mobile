@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
+import 'package:lokakarya_mobile/home/menu.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:lokakarya_mobile/auth/screens/auth_screen.dart';
 
@@ -9,6 +10,8 @@ class LeftDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isAuthenticated = Provider.of<AuthProvider>(context).isAuthenticated;
+
     return Drawer(
       child: ListView(
         children: [
@@ -41,6 +44,18 @@ class LeftDrawer extends StatelessWidget {
                 ),
               ],
             ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.home),
+            title: const Text('Home Page'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MyHomePage(),
+                ),
+              );
+            },
           ),
           ListTile(
             leading: const Icon(Icons.shopping_bag),
@@ -86,27 +101,35 @@ class LeftDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.logout),
-            title: const Text('Logout'),
+            title: Text(isAuthenticated ? 'Logout' : 'Login'),
             onTap: () async {
-              final request = context.read<CookieRequest>();
-              final response = await request.logout(
-                  "http://127.0.0.1:8000/auth/logout_app/");
-              
-              if (context.mounted) {
-                if (response['status']) {
-                  String message = response["message"];
-                  String uname = response["username"];
-                  Provider.of<AuthProvider>(context, listen: false)
-                      .setAuthenticated(false);
-                  
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("$message Sampai jumpa, $uname.")),
-                  );
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const AuthScreen()),
-                  );
+              if (isAuthenticated) {
+                final request = context.read<CookieRequest>();
+                final response = await request.logout(
+                    "http://127.0.0.1:8000/auth/logout_app/");
+                
+                if (context.mounted) {
+                  if (response['status']) {
+                    String message = response["message"];
+                    String uname = response["username"];
+                    Provider.of<AuthProvider>(context, listen: false)
+                        .setAuthenticated(false);
+                    
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("$message Sampai jumpa, $uname.")),
+                    );
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => const AuthScreen()),
+                    );
+                  }
                 }
+              } else {
+                // Navigate to login screen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AuthScreen()),
+                );
               }
             },
           ),
