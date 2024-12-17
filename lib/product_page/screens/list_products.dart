@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:lokakarya_mobile/home/menu.dart';
 import 'package:lokakarya_mobile/home/widgets/bubbletab.dart';
 import 'package:lokakarya_mobile/product_page/widgets/product_list.dart';
-import 'package:lokakarya_mobile/profile/profile.dart';
+import 'package:lokakarya_mobile/profile/screens/profile.dart';
 import 'package:provider/provider.dart';
 
 import '../provider/product_entry_provider.dart';

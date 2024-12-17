@@ -10,6 +10,7 @@ import 'dart:convert';
 import 'package:lokakarya_mobile/widgets/left_drawer.dart';
 import 'package:lokakarya_mobile/profile/screens/edit_profile.dart';
 import 'package:lokakarya_mobile/auth/screens/auth_screen.dart';
+import 'package:lokakarya_mobile/profile/screens/status.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -277,9 +278,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       _buildListTile(
                         'Status',
                         '',
+                        leading: const Icon(Icons.article),
                         onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("[FEATURE] Status isn't implemented yet")),
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const StatusModelPage(),
+                            ),
                           );
                         },
                       ),
@@ -335,7 +340,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildListTile(String title, String trailing, {Color? textColor, VoidCallback? onTap}) {
+  Widget _buildListTile(String title, String trailing, {Color? textColor, Widget? leading, VoidCallback? onTap}) {
     return Card(
       elevation: 0,
       color: Colors.grey[100],
@@ -344,6 +349,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         borderRadius: BorderRadius.circular(12),
       ),
       child: ListTile(
+        leading: leading,
         title: Text(
           title,
           style: TextStyle(
