@@ -21,13 +21,12 @@ class LeftDrawer extends StatelessWidget {
             ),
             child: Column(
               children: [
-                Text(
-                  'LokaKarya',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: Image(
+                    image: AssetImage('assets/images/logo_lokakarya.png'),
+                    height: 50,
+                    fit: BoxFit.contain,
                   ),
                 ),
                 Padding(
