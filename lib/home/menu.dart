@@ -20,7 +20,7 @@ class _MyHomePageState extends State<MyHomePage> {
     'Aksesoris',
     'Anyaman Bambu',
     'Batik Jepara',
-    'Cendera mata',
+    'Cenderamata',
     'Fashion',
     'Keramik',
     'Patung',
@@ -29,7 +29,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final List<String> stores = [
     'Mahaeswari Jepara Craft',
-    'Batik Zara Pasar Ratu',
+    'Pengrajin Tenun Unsiyyah',
     'Toko Adhesi Monel',
   ];
 
@@ -105,39 +105,53 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _buildCategoryCard(BuildContext context, String category) {
     String imagePath;
+    IconData categoryIcon;
 
-    // Assign an image path based on the category
+    // Assign image path and icon based on the category
     switch (category) {
       case 'Aksesoris':
         imagePath = 'assets/images/aksesoris.jpg';
+        categoryIcon = Icons.watch;  // Icon for accessories
         break;
       case 'Anyaman Bambu':
         imagePath = 'assets/images/anyaman_bambu.jpeg';
+        categoryIcon = Icons.texture;  // Icon for woven bamboo
         break;
       case 'Batik Jepara':
         imagePath = 'assets/images/batik_jepara.jpg';
+        categoryIcon = Icons.palette;  // Icon for batik
         break;
-      case 'Cendera mata':
+      case 'Cenderamata':
         imagePath = 'assets/images/cenderamata.jpg';
+        categoryIcon = Icons.card_giftcard;  // Icon for souvenirs
         break;
       case 'Fashion':
         imagePath = 'assets/images/fashion.jpg';
+        categoryIcon = Icons.checkroom;  // Icon for fashion
         break;
       case 'Keramik':
-        imagePath = 'assets/images/keramik.jpg'; // Add appropriate image
+        imagePath = 'assets/images/keramik.jpg';
+        categoryIcon = Icons.coffee;  // Icon for ceramics
         break;
       case 'Patung':
         imagePath = 'assets/images/patung.jpg';
+        categoryIcon = Icons.architecture;  // Icon for statues
         break;
       case 'Ukiran Kayu':
         imagePath = 'assets/images/ukiran_kayu.jpg';
+        categoryIcon = Icons.carpenter;  // Icon for wood carving
         break;
       default:
-        imagePath = 'assets/images/background_auth.jpg'; // Use background_auth.jpg as fallback
+        imagePath = 'assets/images/background_auth.jpg';
+        categoryIcon = Icons.category;
     }
 
     return Card(
       margin: const EdgeInsets.only(right: 8),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () {
           ScaffoldMessenger.of(context)
@@ -145,32 +159,24 @@ class _MyHomePageState extends State<MyHomePage> {
             ..showSnackBar(const SnackBar(
                 content: Text("[FEATURE] Product Page isn't implemented yet")));
         },
-        child: Stack(
-          children: [
-            // Background image
-            Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(imagePath),
-                  fit: BoxFit.cover, // Fill the entire box
-                ),
-              ),
+        child: Container(
+          width: 100,
+          height: 100,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(imagePath),
+              fit: BoxFit.cover,
             ),
-            // Overlay to make text visible
-            Container(
-              width: 100,
-              height: 100,
-              color: Colors.black.withOpacity(0.5), // Dark overlay
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.5),
             ),
-            // Content
-            Container(
-              padding: const EdgeInsets.all(8.0),
+            child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.category, size: 24, color: Colors.white),
+                  Icon(categoryIcon, size: 24, color: Colors.white),  // Using category-specific icon
                   const SizedBox(height: 4),
                   Text(
                     category,
@@ -178,7 +184,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white, // White text for visibility
+                      color: Colors.white,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -186,7 +192,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -200,8 +206,8 @@ class _MyHomePageState extends State<MyHomePage> {
       case 'Mahaeswari Jepara Craft':
         imagePath = 'assets/images/mahaeswari-craft.jpg';
         break;
-      case 'Batik Zara Pasar Ratu':
-        imagePath = 'assets/images/batik_jepara.jpg'; // Add appropriate image
+      case 'Pengrajin Tenun Unsiyyah':
+        imagePath = 'assets/images/tenun-unsiyyah.jpeg'; // Add appropriate image
         break;
       case 'Toko Adhesi Monel':
         imagePath = 'assets/images/toko-adhesi-monel.jpg';
@@ -212,6 +218,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () {
           ScaffoldMessenger.of(context)
@@ -219,45 +229,37 @@ class _MyHomePageState extends State<MyHomePage> {
             ..showSnackBar(const SnackBar(
                 content: Text("[FEATURE] Store Page isn't implemented yet")));
         },
-        child: Stack(
-          children: [
-            // Background image
-            Container(
-              padding: const EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(imagePath),
-                  fit: BoxFit.cover, // Fill the entire box
-                ),
-              ),
+        child: Container(
+          height: 80, // Fixed height for store cards
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(imagePath),
+              fit: BoxFit.cover,
             ),
-            // Overlay to make text visible
-            Container(
-              padding: const EdgeInsets.all(16.0),
-              color: Colors.black.withOpacity(0.5), // Dark overlay
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.5),
             ),
-            // Content
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                children: [
-                  const Icon(Icons.store, size: 40, color: Colors.white),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Text(
-                      store,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white, // White text for visibility
-                      ),
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              children: [
+                const Icon(Icons.store, size: 40, color: Colors.white),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Text(
+                    store,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
                   ),
-                  const Icon(Icons.arrow_forward_ios, color: Colors.white),
-                ],
-              ),
+                ),
+                const Icon(Icons.arrow_forward_ios, color: Colors.white),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -608,29 +610,30 @@ class _MyHomePageState extends State<MyHomePage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            padding: const EdgeInsets.all(16),
+            width: 80,
+            height: 80,
             decoration: BoxDecoration(
               color: bgColor,
               shape: BoxShape.circle,
             ),
-            child: Icon(
-              icon,
-              color: iconColor,
-              size: 48,
+            child: Center(
+              child: Icon(
+                icon,
+                color: iconColor,
+                size: 40,
+              ),
             ),
           ),
           const SizedBox(height: 8),
-          Flexible(
-            child: Text(
-              title,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-              ),
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
             ),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
           ),
         ],
       ),
@@ -643,14 +646,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'LokaKarya',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
+        title: Padding(
+          padding: const EdgeInsets.only(right: 60),
+          child: Center(
+            child: Image.asset(
+              'assets/images/logo_lokakarya.png',
+              height: 65,
+              fit: BoxFit.contain,
+            ),
           ),
         ),
         backgroundColor: const Color(0xFF8B4513),
+        centerTitle: true,
       ),
       drawer: const LeftDrawer(),
       body: SingleChildScrollView(
@@ -678,6 +685,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     color: Colors.white,
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
+                    fontFamily: 'TTMoons',
                   ),
                 ),
               ),
@@ -694,6 +702,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
+                      fontFamily: 'TTMoons',
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -747,6 +756,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
+                          fontFamily: 'TTMoons',
                         ),
                       ),
                       TextButton(
@@ -796,6 +806,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
+                          fontFamily: 'TTMoons',
                         ),
                       ),
                       TextButton(

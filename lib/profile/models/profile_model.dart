@@ -38,6 +38,7 @@ class Fields {
     String location;
     DateTime birthDate;
     bool private;
+    String? profilePicture;
 
     Fields({
         required this.user,
@@ -45,6 +46,7 @@ class Fields {
         required this.location,
         required this.birthDate,
         required this.private,
+        this.profilePicture,
     });
 
     factory Fields.fromJson(Map<String, dynamic> json) => Fields(
@@ -53,6 +55,7 @@ class Fields {
         location: json["location"],
         birthDate: DateTime.parse(json["birth_date"]),
         private: json["private"],
+        profilePicture: json["profile_picture"],
     );
 
     Map<String, dynamic> toJson() => {
