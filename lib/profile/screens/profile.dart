@@ -10,6 +10,7 @@ import 'dart:convert';
 import 'package:lokakarya_mobile/widgets/left_drawer.dart';
 import 'package:lokakarya_mobile/profile/screens/edit_profile.dart';
 import 'package:lokakarya_mobile/auth/screens/auth_screen.dart';
+import 'package:lokakarya_mobile/profile/screens/status.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -142,18 +143,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   padding: const EdgeInsets.all(24.0),
                   child: Column(
                     children: [
-                      // Profile Picture
-                      CircleAvatar(
-                        radius: 50,
-                        backgroundColor: Colors.green[100],  // Light green background
-                        child: Text(
-                          request.jsonData['username']?.toString().substring(0, 1).toUpperCase() ?? 'U',
-                          style: const TextStyle(
-                            fontSize: 32,
-                            color: Color(0xFF8B4513),
-                            fontWeight: FontWeight.bold,
+                      // Updated Profile Picture Section
+                      Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.green[100],
+                          border: Border.all(
+                            color: const Color(0xFF8B4513),
+                            width: 2,
                           ),
                         ),
+                        clipBehavior: Clip.antiAlias,
+                        child: profile.fields.profilePicture != null && 
+                               profile.fields.profilePicture!.isNotEmpty
+                            ? Image.network(
+                                profile.fields.profilePicture!,
+                                fit: BoxFit.cover,
+                                width: 100,
+                                height: 100,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return _buildDefaultAvatar(request);
+                                },
+                                loadingBuilder: (context, child, loadingProgress) {
+                                  if (loadingProgress == null) return child;
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                },
+                              )
+                            : _buildDefaultAvatar(request),
                       ),
                       const SizedBox(height: 12),
                       // Username
@@ -277,9 +297,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       _buildListTile(
                         'Status',
                         '',
+                        leading: const Icon(Icons.article),
                         onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("[FEATURE] Status isn't implemented yet")),
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const StatusModelPage(),
+                            ),
                           );
                         },
                       ),
@@ -335,7 +359,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildListTile(String title, String trailing, {Color? textColor, VoidCallback? onTap}) {
+  Widget _buildListTile(String title, String trailing, {Color? textColor, Widget? leading, VoidCallback? onTap}) {
     return Card(
       elevation: 0,
       color: Colors.grey[100],
@@ -344,6 +368,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         borderRadius: BorderRadius.circular(12),
       ),
       child: ListTile(
+        leading: leading,
         title: Text(
           title,
           style: TextStyle(
@@ -392,6 +417,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
         value: value,
         onChanged: onChanged,
         activeColor: Colors.green,
+      ),
+    );
+  }
+
+  // Add this helper method for the default avatar
+  Widget _buildDefaultAvatar(CookieRequest request) {
+    return Center(
+      child: Text(
+        request.jsonData['username']?.toString().substring(0, 1).toUpperCase() ?? 'U',
+        style: const TextStyle(
+          fontSize: 32,
+          color: Color(0xFF8B4513),
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }
