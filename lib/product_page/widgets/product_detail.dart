@@ -1,5 +1,3 @@
-// lib/pages/product_detail_page.dart
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
@@ -7,6 +5,7 @@ import 'package:lokakarya_mobile/models/product_entry.dart';
 import 'package:lokakarya_mobile/product_page/provider/product_entry_provider.dart';
 import 'package:lokakarya_mobile/product_page/widgets/review.dart';
 import 'package:provider/provider.dart';
+import 'package:lokakarya_mobile/favorites/screens/favorites_mixin.dart';
 
 class ProductDetailPage extends StatefulWidget {
   final ProductEntry product;
@@ -17,10 +16,12 @@ class ProductDetailPage extends StatefulWidget {
   _ProductDetailPageState createState() => _ProductDetailPageState();
 }
 
-class _ProductDetailPageState extends State<ProductDetailPage> {
+class _ProductDetailPageState extends State<ProductDetailPage>  with FavoriteMixin {
   final _reviewController = TextEditingController();
   int _selectedRating = 5;
   int _currentPage = 0; // For page indicators
+  bool _isFavorite = false;
+  bool _isLoading = true;
 
   late PageController _pageController;
 
@@ -28,6 +29,15 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   void initState() {
     super.initState();
     _pageController = PageController(viewportFraction: 0.85);
+    _checkFavoriteStatus();
+  }
+
+    Future<void> _checkFavoriteStatus() async {
+    final isFav = await checkIsFavorite(context, widget.product.pk.toString());
+    setState(() {
+      _isFavorite = isFav;
+      _isLoading = false;
+    });
   }
 
   @override
@@ -60,6 +70,27 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text("Review added successfully.")),
     );
+  }
+
+
+
+
+  Future<void> _handleFavoriteToggle() async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    if (!authProvider.isAuthenticated) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please log in to add favorites.")),
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
+    try {
+      await toggleFavorite(context, widget.product.pk.toString(), _isFavorite);
+      setState(() => _isFavorite = !_isFavorite);
+    } finally {
+      setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -137,16 +168,18 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               ],
             ),
             const SizedBox(height: 16.0),
-            // Add to Favorites Button
+          
+          // Favorite Button
             ElevatedButton.icon(
-              onPressed: () {
-                // TODO: Implement add to favorites functionality
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Added to favorites.")),
-                );
-              },
-              icon: const Icon(Icons.favorite_border),
-              label: const Text("Add to Favorites"),
+              onPressed: _isLoading ? null : _handleFavoriteToggle,
+              icon: Icon(
+                _isFavorite ? Icons.favorite : Icons.favorite_border,
+                color: _isFavorite ? Colors.red : null,
+              ),
+              label: Text(_isFavorite ? "Remove from Favorites" : "Add to Favorites"),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: _isFavorite ? Colors.grey[200] : null,
+              ),
             ),
             const SizedBox(height: 24.0),
             // Affiliated Stores Section (Assuming you have it implemented)
@@ -332,3 +365,5 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     );
   }
 }
+
+
