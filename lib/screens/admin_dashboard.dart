@@ -13,7 +13,7 @@ class AdminDashboardPage extends StatefulWidget {
 
 class _AdminDashboardPageState extends State<AdminDashboardPage> {
   Future<List<ProductEntry>> fetchProducts(CookieRequest request) async {
-    final response = await request.get('http://127.0.0.1:8000/products/json/');
+    final response = await request.get('http://127.0.0.1:8000/flutterproducts/');
     return List<ProductEntry>.from(response['products'].map((product) => ProductEntry.fromJson(product)));
   }
 
