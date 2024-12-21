@@ -13,17 +13,59 @@ class AdminDashboardPage extends StatefulWidget {
 
 class _AdminDashboardPageState extends State<AdminDashboardPage> {
   Future<List<ProductEntry>> fetchProducts(CookieRequest request) async {
-    final response = await request.get('http://127.0.0.1:8000/flutterproducts/');
-    return List<ProductEntry>.from(
-      (response as List).map((product) => ProductEntry.fromJson(product)),
-    );
+    try {
+      final response = await request.get('http://127.0.0.1:8000/flutterproducts/');
+      print('Raw API Response: $response'); // Debug print
+      
+      if (response == null) {
+        throw Exception('Response is null');
+      }
+
+      // Check if response is a List
+      if (response is! List) {
+        print('Response type: ${response.runtimeType}'); // Debug print
+        throw Exception('Expected List but got ${response.runtimeType}');
+      }
+
+      return List<ProductEntry>.from(
+        response.map((product) {
+          print('Processing product: $product'); // Debug print
+          return ProductEntry.fromJson(product);
+        })
+      );
+    } catch (e, stackTrace) {
+      print('Error fetching products: $e'); // Debug print
+      print('Stack trace: $stackTrace'); // Debug print
+      throw Exception('Failed to fetch products: $e');
+    }
   }
 
   Future<List<StoreEntry>> fetchStores(CookieRequest request) async {
-    final response = await request.get('http://127.0.0.1:8000/flutterstores/');
-    return List<StoreEntry>.from(
-      (response as List).map((store) => StoreEntry.fromJson(store)),
-    );
+    try {
+      final response = await request.get('http://127.0.0.1:8000/flutterstores/');
+      print('Raw API Response: $response'); // Debug print
+      
+      if (response == null) {
+        throw Exception('Response is null');
+      }
+
+      // Check if response is a List
+      if (response is! List) {
+        print('Response type: ${response.runtimeType}'); // Debug print
+        throw Exception('Expected List but got ${response.runtimeType}');
+      }
+
+      return List<StoreEntry>.from(
+        response.map((store) {
+          print('Processing store: $store'); // Debug print
+          return StoreEntry.fromJson(store);
+        })
+      );
+    } catch (e, stackTrace) {
+      print('Error fetching stores: $e'); // Debug print
+      print('Stack trace: $stackTrace'); // Debug print
+      throw Exception('Failed to fetch stores: $e');
+    }
   }
 
   @override
@@ -36,11 +78,14 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
       body: FutureBuilder(
         future: Future.wait([fetchProducts(request), fetchStores(request)]),
         builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+          print('Snapshot state: ${snapshot.connectionState}'); // Debug print
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
+            print('Snapshot error: ${snapshot.error}'); // Debug print
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
+            print('Snapshot data: ${snapshot.data}'); // Debug print
             final products = snapshot.data![0] as List<ProductEntry>;
             final stores = snapshot.data![1] as List<StoreEntry>;
             return SingleChildScrollView(
@@ -60,6 +105,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                       itemCount: products.length,
                       itemBuilder: (context, index) {
                         final product = products[index];
+                        print('Displaying product: ${product.fields.name}'); // Debug print
                         return Card(
                           child: ListTile(
                             title: Text(product.fields.name),
@@ -81,6 +127,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                       itemCount: stores.length,
                       itemBuilder: (context, index) {
                         final store = stores[index];
+                        print('Displaying store: ${store.fields.nama}'); // Debug print
                         return Card(
                           child: ListTile(
                             title: Text(store.fields.nama),
