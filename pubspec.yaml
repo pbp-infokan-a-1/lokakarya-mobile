@@ -30,6 +30,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  shared_preferences: ^2.0.9
+  cached_network_image: ^3.2.3
+  flutter_dotenv: ^5.0.2
+  intl: ^0.17.0
+  url_launcher: ^6.1.10
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -37,6 +42,9 @@ dependencies:
   cupertino_icons: ^1.0.8
   provider: ^6.1.2
   pbp_django_auth: ^0.4.0
+  http: ^1.2.2
+  carousel_slider: ^4.2.1
+  image_picker: ^1.0.7
 
 dev_dependencies:
   flutter_test:
@@ -90,3 +98,56 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+  fonts:
+    - family: Caruban
+      fonts:
+        - asset: assets/fonts/Caruban-EBK8.ttf
+    - family: TTMoons
+      fonts:
+        - asset: assets/fonts/TT Moons Trial Black.otf
+    - family: TTMoonsThin
+      fonts:
+        - asset: assets/fonts/TT Moons Trial Thin.otf
+    - family: TommySoftMedium
+      fonts:
+        - asset: assets/fonts/tommy-soft-medium.otf
+    - family: TommySoftBold
+      fonts:
+        - asset: assets/fonts/tommy-soft-bold.otf
+    - family: Galey
+      fonts:
+        - asset: assets/fonts/galey.ttf
+    - family: GaleySemibold
+      fonts:
+        - asset: assets/fonts/galey_semibold.ttf
+    - family: Mont
+      fonts:
+        - asset: assets/fonts/mont.otf
+    - family: Cabin
+      fonts:
+        - asset: assets/fonts/cabin.ttf
+    - family: CabinSemi
+      fonts:
+        - asset: assets/fonts/cabin-semibold.ttf
+
+  assets:
+    - assets/images/background_auth.jpg
+    - assets/images/logo_lokakarya.png
+    - assets/images/bg_login.jpg
+    - assets/images/promo1.png
+    - assets/images/promo2.png
+    - assets/images/activity1.png
+    - assets/images/activity2.png
+    - assets/images/activity3.png
+    - assets/images/aksesoris.jpg
+    - assets/images/fashion.jpg
+    - assets/images/anyaman_bambu.jpeg
+    - assets/images/batik_jepara.jpg
+    - assets/images/cenderamata.jpg
+    - assets/images/mahaeswari-craft.jpg
+    - assets/images/patung.jpg
+    - assets/images/tenun-unsiyyah.jpeg
+    - assets/images/toko-adhesi-monel.jpg
+    - assets/images/ukiran_kayu.jpg
+    - assets/images/keramik.jpg

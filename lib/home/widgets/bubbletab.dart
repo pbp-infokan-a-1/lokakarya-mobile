@@ -15,14 +15,26 @@ class BubbleTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final int itemCount = isAuthenticated ? 4 : 3;
+
+    final int validIndex = selectedIndex < itemCount ? selectedIndex : 0;
+
     return BottomNavigationBar(
-      currentIndex: selectedIndex,
+      currentIndex: validIndex,
       onTap: onTabChange,
+      backgroundColor: Colors.white,
+      selectedItemColor: Theme.of(context).colorScheme.primary,
+      unselectedItemColor: Colors.grey,
+      type: BottomNavigationBarType.fixed,
       items: isAuthenticated
           ? const [
               BottomNavigationBarItem(
                 icon: Icon(Icons.home),
                 label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.shopping_bag),
+                label: 'Products',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.forum),
@@ -41,6 +53,10 @@ class BubbleTabBar extends StatelessWidget {
               BottomNavigationBarItem(
                 icon: Icon(Icons.login),
                 label: 'Login',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.shopping_bag),
+                label: 'Products',
               ),
             ],
     );
