@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:lokakarya_mobile/models/product_entry.dart';
 import 'package:lokakarya_mobile/models/store_entry.dart' as storeEntry;
+import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
 
 class AdminDashboardPage extends StatefulWidget {
   const AdminDashboardPage({super.key});
@@ -84,6 +85,9 @@ Future<List<storeEntry.StoreEntry>> fetchStores(CookieRequest request) async {
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
+    final authProvider = Provider.of<AuthProvider>(context);
+    final bool isSuperuser = authProvider.isSuperuser;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Admin Dashboard'),
@@ -156,6 +160,14 @@ Future<List<storeEntry.StoreEntry>> fetchStores(CookieRequest request) async {
           }
         },
       ),
+      floatingActionButton: isSuperuser 
+          ? FloatingActionButton(
+              onPressed: () {
+                // Add your onPressed code here!
+              },
+              child: const Icon(Icons.add),
+            )
+          : null,
     );
   }
 }
