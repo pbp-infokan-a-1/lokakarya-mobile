@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lokakarya_mobile/favorites/screens/favorites_page.dart';
+import 'package:lokakarya_mobile/product_page/screens/list_products.dart';
 import 'package:provider/provider.dart';
 import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
 import 'package:lokakarya_mobile/home/menu.dart';
@@ -61,10 +63,12 @@ class LeftDrawer extends StatelessWidget {
             leading: const Icon(Icons.shopping_bag),
             title: const Text('Product Page'),
             onTap: () {
-              ScaffoldMessenger.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(const SnackBar(
-                    content: Text("[FEATURE] Product Page isn't implemented yet")));
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ProductEntryPage(),
+                ),
+              );
             },
           ),
           ListTile(
@@ -92,11 +96,12 @@ class LeftDrawer extends StatelessWidget {
             leading: const Icon(Icons.favorite),
             title: const Text('My Favorites'),
             onTap: () {
-              ScaffoldMessenger.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(const SnackBar(
-                    content:
-                        Text("[FEATURE] My Favorites isn't implemented yet")));
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const FavoritesPage(),
+                ),
+              );
             },
           ),
           ListTile(
