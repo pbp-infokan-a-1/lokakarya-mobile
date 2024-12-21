@@ -4,6 +4,7 @@ import 'package:lokakarya_mobile/auth/screens/auth_screen.dart';
 import 'package:lokakarya_mobile/home/widgets/bubbletab.dart';
 import 'package:lokakarya_mobile/product_page/screens/list_products.dart';
 import 'package:lokakarya_mobile/profile/screens/profile.dart';
+import 'package:lokakarya_mobile/stores/screens/stores_page.dart';
 import 'package:lokakarya_mobile/widgets/left_drawer.dart';
 import 'package:provider/provider.dart';
 
@@ -154,10 +155,12 @@ class _MyHomePageState extends State<MyHomePage> {
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(const SnackBar(
-                content: Text("[FEATURE] Product Page isn't implemented yet")));
+         Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ProductEntryPage(),
+                ),
+              );
         },
         child: Container(
           width: 100,
@@ -224,10 +227,11 @@ class _MyHomePageState extends State<MyHomePage> {
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(const SnackBar(
-                content: Text("[FEATURE] Store Page isn't implemented yet")));
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const StoresPage()),
+                );
         },
         child: Container(
           height: 80, // Fixed height for store cards
@@ -811,11 +815,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       TextButton(
                         onPressed: () {
-                          ScaffoldMessenger.of(context)
-                            ..hideCurrentSnackBar()
-                            ..showSnackBar(const SnackBar(
-                              content: Text("[FEATURE] Affiliate Stores isn't implemented yet"),
-                            ));
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const StoresPage()),
+                              );
                         },
                         child: const Text('Show More'),
                       ),
