@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:lokakarya_mobile/models/product_entry.dart';
-import 'package:lokakarya_mobile/models/store_entry.dart';
+import 'package:lokakarya_mobile/models/store_entry.dart' as storeEntry;
 
 class AdminDashboardPage extends StatefulWidget {
   const AdminDashboardPage({super.key});
@@ -40,33 +40,46 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
     }
   }
 
-  Future<List<StoreEntry>> fetchStores(CookieRequest request) async {
-    try {
-      final response = await request.get('http://127.0.0.1:8000/flutterstores/');
-      print('Raw API Response: $response'); // Debug print
-      
-      if (response == null) {
-        throw Exception('Response is null');
-      }
+Future<List<storeEntry.StoreEntry>> fetchStores(CookieRequest request) async {
+  try {
+    final response = await request.get('http://127.0.0.1:8000/stores/');
+    print('Raw API Response: $response'); // Debug print
 
-      // Check if response is a List
-      if (response is! List) {
-        print('Response type: ${response.runtimeType}'); // Debug print
-        throw Exception('Expected List but got ${response.runtimeType}');
-      }
-
-      return List<StoreEntry>.from(
-        response.map((store) {
-          print('Processing store: $store'); // Debug print
-          return StoreEntry.fromJson(store);
-        })
-      );
-    } catch (e, stackTrace) {
-      print('Error fetching stores: $e'); // Debug print
-      print('Stack trace: $stackTrace'); // Debug print
-      throw Exception('Failed to fetch stores: $e');
+    // Validate response and extract the 'stores' key
+    if (response == null || response['stores'] == null) {
+      throw Exception('Invalid response: No stores data found');
     }
+
+    final storesList = response['stores'];
+    if (storesList is! List) {
+      throw Exception('Expected List but got ${storesList.runtimeType}');
+    }
+
+    // Map the flat JSON structure to StoreEntry
+    return List<storeEntry.StoreEntry>.from(
+      storesList.map((store) => storeEntry.StoreEntry(
+        model: storeEntry.Model.STOREPAGE_TOKO, // Default model
+        pk: store['id'],
+        fields: storeEntry.Fields(
+          nama: store['nama'],
+          hariBuka: storeEntry.hariBukaValues.map[store['hari_buka']] ?? storeEntry.HariBuka.SENIN_JUMAT,
+          alamat: store['alamat'],
+          email: store['email'],
+          telepon: store['telepon'],
+          image: store['image_url'],
+          gmapsLink: store['gmaps_link'],
+        ),
+      )),
+    );
+  } catch (e, stackTrace) {
+    print('Error fetching stores: $e'); // Debug print
+    print('Stack trace: $stackTrace'); // Debug print
+    throw Exception('Failed to fetch stores: $e');
   }
+}
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +100,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
           } else {
             print('Snapshot data: ${snapshot.data}'); // Debug print
             final products = snapshot.data![0] as List<ProductEntry>;
-            final stores = snapshot.data![1] as List<StoreEntry>;
+            final stores = snapshot.data![1] as List<storeEntry.StoreEntry>;
             return SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
