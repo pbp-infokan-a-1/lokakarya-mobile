@@ -4,6 +4,7 @@ import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
 import 'package:lokakarya_mobile/home/menu.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:lokakarya_mobile/auth/screens/auth_screen.dart';
+import 'package:lokakarya_mobile/screens/admin_dashboard.dart';
 
 class LeftDrawer extends StatelessWidget {
   const LeftDrawer({super.key});
@@ -99,6 +100,18 @@ class LeftDrawer extends StatelessWidget {
             },
           ),
           ListTile(
+            leading: const Icon(Icons.admin_panel_settings),
+            title: const Text('Admin Dashboard'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AdminDashboardPage(),
+                ),
+              );
+            },
+          ),
+          ListTile(
             leading: const Icon(Icons.logout),
             title: Text(isAuthenticated ? 'Logout' : 'Login'),
             onTap: () async {
@@ -136,4 +149,4 @@ class LeftDrawer extends StatelessWidget {
       ),
     );
   }
-} 
+}
