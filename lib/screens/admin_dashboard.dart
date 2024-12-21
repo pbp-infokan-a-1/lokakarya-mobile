@@ -14,13 +14,17 @@ class AdminDashboardPage extends StatefulWidget {
 class _AdminDashboardPageState extends State<AdminDashboardPage> {
   Future<List<ProductEntry>> fetchProducts(CookieRequest request) async {
     final response = await request.get('http://127.0.0.1:8000/flutterproducts/');
-    return List<ProductEntry>.from(response['products'].map((product) => ProductEntry.fromJson(product)));
+    return List<ProductEntry>.from(
+      (response as List).map((product) => ProductEntry.fromJson(product)),
+    );
   }
 
-  // Future<List<StoreEntry>> fetchStores(CookieRequest request) async {
-  //   final response = await request.get('http://127.0.0.1:8000/toko/json/');
-  //   return List<StoreEntry>.from(response['stores'].map((store) => StoreEntry.fromJson(store)));
-  // }
+  Future<List<StoreEntry>> fetchStores(CookieRequest request) async {
+    final response = await request.get('http://127.0.0.1:8000/flutterstores/');
+    return List<StoreEntry>.from(
+      (response as List).map((store) => StoreEntry.fromJson(store)),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +34,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
         title: const Text('Admin Dashboard'),
       ),
       body: FutureBuilder(
-        // TODO: fetch stores janlup
-        future: Future.wait([fetchProducts(request), ]),
+        future: Future.wait([fetchProducts(request), fetchStores(request)]),
         builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
