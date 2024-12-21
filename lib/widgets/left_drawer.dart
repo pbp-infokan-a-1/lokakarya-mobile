@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lokakarya_mobile/favorites/screens/favorites_page.dart';
 import 'package:lokakarya_mobile/product_page/screens/list_products.dart';
+import 'package:lokakarya_mobile/stores/screens/stores_page.dart';
 import 'package:provider/provider.dart';
 import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
 import 'package:lokakarya_mobile/home/menu.dart';
@@ -74,10 +75,10 @@ class LeftDrawer extends StatelessWidget {
             leading: const Icon(Icons.store),
             title: const Text('Store Page'),
             onTap: () {
-              ScaffoldMessenger.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(const SnackBar(
-                    content: Text("[FEATURE] Store Page isn't implemented yet")));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const StoresPage()),
+                );
             },
           ),
           ListTile(

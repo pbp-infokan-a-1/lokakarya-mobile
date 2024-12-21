@@ -173,6 +173,12 @@ class _LoginPageState extends State<LoginPage> {
                               String message = response['message'];
                               String uname = response['username'];
                               String sessionId = response['sessionid'];
+                              bool isSuperuser = response['is_superuser'] ?? false;
+
+                              final authProvider = Provider.of<AuthProvider>(context, listen: false);
+                              authProvider.setAuthenticated(true);
+                              authProvider.setSuperuser(isSuperuser);
+
                               if (context.mounted) {
                                 Provider.of<AuthProvider>(context, listen: false)
                                     .setAuthenticated(true);
