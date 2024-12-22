@@ -90,3 +90,5 @@ List initial dataset dapat diakses pada tautan berikut ->  [ristek.link/LokaKary
 
 ### 5. **Deployment dan Pemantauan**
    Koneksi ke web service terus dipantau untuk memastikan aplikasi berjalan dengan lancar. Kami memantau kinerja API dan waktu respons untuk memastikan sistem tidak terganggu.
+
+[![Build status](https://build.appcenter.ms/v0.1/apps/7c327f13-1aee-414c-a408-b78e80000e0b/branches/master/badge)](https://appcenter.ms)
