@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:lokakarya_mobile/models/product_entry.dart';
-import 'package:lokakarya_mobile/product_page/widgets/product_detail.dart';
+import 'package:lokakarya_mobile/product_page/screens/product_detail.dart';
 import 'package:lokakarya_mobile/widgets/left_drawer.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:http/http.dart' as http;
