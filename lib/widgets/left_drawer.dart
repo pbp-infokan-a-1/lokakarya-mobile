@@ -7,6 +7,7 @@ import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
 import 'package:lokakarya_mobile/home/screens/menu.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:lokakarya_mobile/auth/screens/auth_screen.dart';
+import 'package:lokakarya_mobile/forumandreviewpage/screens/list_forumentry.dart';
 import 'package:lokakarya_mobile/screens/admin_dashboard.dart';
 
 class LeftDrawer extends StatelessWidget {
@@ -94,11 +95,12 @@ class LeftDrawer extends StatelessWidget {
             leading: const Icon(Icons.forum),
             title: const Text('Forum & Review'),
             onTap: () {
-              ScaffoldMessenger.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(const SnackBar(
-                    content:
-                        Text("[FEATURE] Forum & Review isn't implemented yet")));
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ForumEntryPage(),
+                ),
+              );
             },
           ),
           ListTile(
@@ -146,22 +148,23 @@ class LeftDrawer extends StatelessWidget {
             onTap: () async {
               if (isAuthenticated) {
                 final request = context.read<CookieRequest>();
-                final response = await request.logout(
-                    "http://127.0.0.1:8000/auth/logout_app/");
-                
+                final response = await request
+                    .logout("http://127.0.0.1:8000/auth/logout_app/");
+
                 if (context.mounted) {
                   if (response['status']) {
                     String message = response["message"];
                     String uname = response["username"];
                     Provider.of<AuthProvider>(context, listen: false)
                         .setAuthenticated(false);
-                    
+
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text("$message Sampai jumpa, $uname.")),
                     );
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => const AuthScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => const AuthScreen()),
                     );
                   }
                 }
@@ -179,3 +182,4 @@ class LeftDrawer extends StatelessWidget {
     );
   }
 }
+

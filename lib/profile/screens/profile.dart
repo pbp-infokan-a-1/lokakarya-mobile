@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lokakarya_mobile/forumandreviewpage/screens/list_forumentry.dart';
 import 'package:lokakarya_mobile/widgets/bubbletab.dart';
 import 'package:lokakarya_mobile/home/screens/menu.dart';
 import 'package:provider/provider.dart';
@@ -70,8 +71,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         MaterialPageRoute(builder: (context) => const ProductEntryPage()),
       );
     } else if (index == 2) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("[FEATURE] Forum & Review isn't implemented yet")),
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const ForumEntryPage()),
       );
     }
   }

@@ -6,6 +6,7 @@ import 'dart:convert';
 
 import 'category.dart';
 import 'rating.dart';
+import 'store_entry.dart';
 
 List<ProductEntry> productEntryFromJson(String str) => List<ProductEntry>.from(
     json.decode(str).map((x) => ProductEntry.fromJson(x)));
@@ -43,7 +44,7 @@ class Fields {
   final int minPrice;
   final int maxPrice;
   final String description;
-  final List<int> store;
+  final List<StoreEntry> store;
   final String? image;
   double averageRating;
   int numReviews;
@@ -68,7 +69,8 @@ class Fields {
         minPrice: json["min_price"],
         maxPrice: json["max_price"],
         description: json["description"],
-        store: List<int>.from(json["store"].map((x) => x)),
+        store: List<StoreEntry>.from(
+            json["store"].map((x) => StoreEntry.fromJson(x))),
         image: json["image"],
         averageRating: (json["average_rating"]).toDouble() ?? 0.0,
         numReviews: json["num_reviews"] ?? 0,
@@ -83,7 +85,7 @@ class Fields {
         "min_price": minPrice,
         "max_price": maxPrice,
         "description": description,
-        "store": List<dynamic>.from(store.map((x) => x)),
+        "store": List<dynamic>.from(store.map((x) => x.toJson())),
         "image": image,
         "average_rating": averageRating,
         "num_reviews": numReviews,
