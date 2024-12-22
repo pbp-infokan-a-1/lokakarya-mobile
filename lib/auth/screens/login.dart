@@ -1,10 +1,10 @@
 import 'package:lokakarya_mobile/home/screens/menu.dart';
 import 'package:flutter/material.dart';
-import 'package:pbp_django_auth/pbp_django_auth.dart';
-import 'package:provider/provider.dart';
-import 'package:lokakarya_mobile/auth/screens/register.dart';
 import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
 import 'package:lokakarya_mobile/auth/screens/auth_screen.dart';
+import 'package:lokakarya_mobile/auth/screens/register.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const LoginApp());
@@ -67,11 +67,13 @@ class _LoginPageState extends State<LoginPage> {
                 Align(
                   alignment: Alignment.topLeft,
                   child: IconButton(
-                    icon: const Icon(Icons.arrow_back, color: Color(0xFF8B4513)),
+                    icon:
+                        const Icon(Icons.arrow_back, color: Color(0xFF8B4513)),
                     onPressed: () {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => const AuthScreen()),
+                        MaterialPageRoute(
+                            builder: (context) => const AuthScreen()),
                       );
                     },
                   ),
@@ -120,11 +122,13 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15.0),
-                              borderSide: BorderSide(color: Colors.grey.shade300),
+                              borderSide:
+                                  BorderSide(color: Colors.grey.shade300),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15.0),
-                              borderSide: const BorderSide(color: Color(0xFF8B4513)),
+                              borderSide:
+                                  const BorderSide(color: Color(0xFF8B4513)),
                             ),
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 16.0,
@@ -144,11 +148,13 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15.0),
-                              borderSide: BorderSide(color: Colors.grey.shade300),
+                              borderSide:
+                                  BorderSide(color: Colors.grey.shade300),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15.0),
-                              borderSide: const BorderSide(color: Color(0xFF8B4513)),
+                              borderSide:
+                                  const BorderSide(color: Color(0xFF8B4513)),
                             ),
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 16.0,
@@ -163,8 +169,8 @@ class _LoginPageState extends State<LoginPage> {
                             String username = _usernameController.text;
                             String password = _passwordController.text;
 
-                            final response = await request
-                                .login("http://127.0.0.1:8000/auth/login_app/", {
+                            final response = await request.login(
+                                "http://127.0.0.1:8000/auth/login_app/", {
                               'username': username,
                               'password': password,
                             });
@@ -180,8 +186,12 @@ class _LoginPageState extends State<LoginPage> {
                               authProvider.setSuperuser(isSuperuser);
 
                               if (context.mounted) {
-                                Provider.of<AuthProvider>(context, listen: false)
+                                Provider.of<AuthProvider>(context,
+                                        listen: false)
                                     .setAuthenticated(true);
+                                Provider.of<AuthProvider>(context,
+                                        listen: false)
+                                    .setUsername(uname);
 
                                 request.jsonData['username'] = uname;
                                 request.jsonData['sessionid'] = sessionId;
@@ -243,7 +253,8 @@ class _LoginPageState extends State<LoginPage> {
                           onTap: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => const RegisterPage()),
+                              MaterialPageRoute(
+                                  builder: (context) => const RegisterPage()),
                             );
                           },
                           child: RichText(

@@ -169,8 +169,8 @@ import 'package:provider/provider.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:lokakarya_mobile/forumandreviewpage/models/forum_entry.dart';
 import 'package:lokakarya_mobile/forumandreviewpage/screens/forumentry_form.dart';
-import 'package:lokakarya_mobile/home/menu.dart';
-import 'package:lokakarya_mobile/home/widgets/bubbletab.dart';
+import 'package:lokakarya_mobile/home/screens/menu.dart';
+import 'package:lokakarya_mobile/widgets/bubbletab.dart';
 import 'package:lokakarya_mobile/product_page/screens/list_products.dart';
 import 'package:lokakarya_mobile/profile/screens/profile.dart';
 
