@@ -1,18 +1,18 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:lokakarya_mobile/forumandreviewpage/screens/list_forumentry.dart';
-import 'package:lokakarya_mobile/home/screens/menu.dart';
-import 'package:lokakarya_mobile/widgets/bubbletab.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
+import 'package:lokakarya_mobile/auth/screens/login.dart';
+import 'package:lokakarya_mobile/home/screens/menu.dart';
 import 'package:lokakarya_mobile/product_page/widgets/product_list.dart';
-import 'package:lokakarya_mobile/profile/screens/profile.dart';
+import 'package:lokakarya_mobile/widgets/bubbletab.dart';
 import 'package:lokakarya_mobile/widgets/left_drawer.dart';
 import 'package:provider/provider.dart';
+
 import '../provider/product_entry_provider.dart';
 import '../widgets/filter_chips.dart';
 import '../widgets/sort_chips.dart';
-import 'package:lokakarya_mobile/auth/screens/auth_screen.dart';
-import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
 
 class ProductEntryPage extends StatefulWidget {
   final int? initialCategoryId; // Add this line
@@ -24,7 +24,7 @@ class ProductEntryPage extends StatefulWidget {
 }
 
 class _ProductEntryPageState extends State<ProductEntryPage> {
-  int _selectedIndex = 1;
+  int _selectedIndex = AuthProvider().isAuthenticated ? 1 : 9;
   TextEditingController _searchController = TextEditingController();
   Timer? _debounce;
 
@@ -55,36 +55,25 @@ class _ProductEntryPageState extends State<ProductEntryPage> {
   }
 
   void _onTabChange(int index) {
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    setState(() {
+      _selectedIndex = index;
+    });
 
-      // If not authenticated and trying to access protected tabs
-      if (!authProvider.isAuthenticated && index > 0) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const AuthScreen()),
-        );
-        return;
-      } else {
-        setState(() {
-          _selectedIndex = index;
-        });
-        if (index == 0) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => MyHomePage()),
-          );
-        } else if (index == 3) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const ProfileScreen()),
-          );
-        } else if (index == 2) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const ForumEntryPage()),
-          );
-        }
-      }
+    if (_selectedIndex == 0) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MyHomePage(),
+        ),
+      );
+    } else if (_selectedIndex == 1) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const LoginApp(),
+        ),
+      );
+    }
   }
 
   void _onSearchChanged() {
@@ -171,7 +160,7 @@ class _ProductEntryPageState extends State<ProductEntryPage> {
       bottomNavigationBar: BubbleTabBar(
         selectedIndex: _selectedIndex,
         onTabChange: _onTabChange,
-        isAuthenticated: true,
+        isAuthenticated: AuthProvider().isAuthenticated,
       ),
     );
   }

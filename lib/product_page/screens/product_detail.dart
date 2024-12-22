@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
+import 'package:lokakarya_mobile/auth/screens/login.dart';
 import 'package:lokakarya_mobile/favorites/screens/favorites_mixin.dart';
 import 'package:lokakarya_mobile/home/screens/menu.dart';
 import 'package:lokakarya_mobile/models/product_entry.dart';
@@ -11,12 +12,10 @@ import 'package:lokakarya_mobile/models/store_entry.dart';
 import 'package:lokakarya_mobile/product_page/provider/product_entry_provider.dart';
 import 'package:lokakarya_mobile/product_page/widgets/review.dart';
 import 'package:lokakarya_mobile/product_page/widgets/star_rating.dart';
-import 'package:lokakarya_mobile/profile/screens/profile.dart';
 import 'package:lokakarya_mobile/widgets/bubbletab.dart';
 import 'package:lokakarya_mobile/widgets/left_drawer.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
-import 'package:lokakarya_mobile/forumandreviewpage/screens/list_forumentry.dart';
 
 class ProductDetailPage extends StatefulWidget {
   final ProductEntry product;
@@ -108,17 +107,10 @@ class _ProductDetailPageState extends State<ProductDetailPage>
         context,
         MaterialPageRoute(builder: (context) => MyHomePage()),
       );
-    } else if (_selectedIndex == 3) {
+    } else if (_selectedIndex == 1) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const ProfileScreen()),
-      );
-    } else if (_selectedIndex == 2) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const ForumEntryPage(),
-        ),
+        MaterialPageRoute(builder: (context) => LoginApp()),
       );
     }
   }
