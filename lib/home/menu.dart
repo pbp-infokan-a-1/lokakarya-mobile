@@ -6,8 +6,14 @@ import 'package:lokakarya_mobile/product_page/screens/list_products.dart';
 import 'package:lokakarya_mobile/profile/screens/profile.dart';
 import 'package:lokakarya_mobile/stores/screens/stores_page.dart';
 import 'package:lokakarya_mobile/widgets/left_drawer.dart';
+import 'package:lokakarya_mobile/favorites/screens/favorites_page.dart';
 import 'package:provider/provider.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:lokakarya_mobile/product_page/widgets/product_detail.dart';
+import 'package:lokakarya_mobile/stores/screens/stores_detail.dart';
+import 'package:lokakarya_mobile/profile/screens/other_user_profile.dart';
+import 'package:lokakarya_mobile/models/product_entry.dart';
+import 'package:lokakarya_mobile/stores/models/stores_entry.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({super.key});
@@ -655,15 +661,41 @@ class _MyHomePageState extends State<MyHomePage> {
       );
 
       if (response != null) {
+        // Convert the response data to match the expected models
+        final products = (response['products'] as List?)?.map((product) {
+          try {
+            return ProductEntry.fromJson(product);
+          } catch (e) {
+            print('Error parsing product: $e');
+            return null;
+          }
+        }).whereType<ProductEntry>().toList() ?? [];
+
+        final stores = (response['stores'] as List?)?.map((store) {
+          try {
+            return StoresModel.fromJson(store);
+          } catch (e) {
+            print('Error parsing store: $e');
+            return null;
+          }
+        }).whereType<StoresModel>().toList() ?? [];
+
+        final profiles = response['profiles'] as List? ?? [];
+
         // Show search results in a modal bottom sheet
         if (!mounted) return;
         showModalBottomSheet(
           context: context,
           isScrollControlled: true,
-          builder: (context) => _buildSearchResults(response),
+          builder: (context) => _buildSearchResults({
+            'products': products,
+            'stores': stores,
+            'profiles': profiles,
+          }),
         );
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      print('Search error: $e\n$stackTrace');
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error performing search: $e')),
@@ -716,15 +748,20 @@ class _MyHomePageState extends State<MyHomePage> {
                     ...List.generate(
                       results['products'].length,
                       (index) => _buildSearchResultTile(
-                        results['products'][index]['name'] ?? 'Unknown Product',
-                        'Product',
+                        (results['products'][index] as ProductEntry).fields.name,
+                        (results['products'][index] as ProductEntry).fields.description,
                         Icons.shopping_bag,
-                        () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ProductEntryPage(),
-                          ),
-                        ),
+                        () {
+                          Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProductDetailPage(
+                                product: results['products'][index] as ProductEntry,
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -742,15 +779,21 @@ class _MyHomePageState extends State<MyHomePage> {
                     ...List.generate(
                       results['stores'].length,
                       (index) => _buildSearchResultTile(
-                        results['stores'][index]['name'] ?? 'Unknown Store',
+                        (results['stores'][index] as StoresModel).nama,
                         'Store',
                         Icons.store,
-                        () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const StoresPage(),
-                          ),
-                        ),
+                        () {
+                          Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => StoresProductDetail(
+                                store: results['stores'][index] as StoresModel,
+                                isSuperuser: false,
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -769,14 +812,19 @@ class _MyHomePageState extends State<MyHomePage> {
                       results['profiles'].length,
                       (index) => _buildSearchResultTile(
                         results['profiles'][index]['username'] ?? 'Unknown User',
-                        'Profile',
+                        results['profiles'][index]['bio'] ?? '',
                         Icons.person,
-                        () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ProfileScreen(),
-                          ),
-                        ),
+                        () {
+                          Navigator.pop(context); // Close search results
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => OtherUserProfileScreen(
+                                username: results['profiles'][index]['username'],
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ],
@@ -923,29 +971,68 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: ListView(
                       scrollDirection: Axis.horizontal,
                       children: [
-                        _buildSmallFeatureItem(
-                          'Product',
-                          Icons.shopping_bag,
-                          Colors.brown.shade50,
-                          const Color(0xFF8B4513),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ProductEntryPage(),
+                              ),
+                            );
+                          },
+                          child: _buildSmallFeatureItem(
+                            'Product',
+                            Icons.shopping_bag,
+                            Colors.brown.shade50,
+                            const Color(0xFF8B4513),
+                          ),
                         ),
-                        _buildSmallFeatureItem(
-                          'Store',
-                          Icons.store,
-                          Colors.green.shade50,
-                          Colors.green,
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const StoresPage(),
+                              ),
+                            );
+                          },
+                          child: _buildSmallFeatureItem(
+                            'Store',
+                            Icons.store,
+                            Colors.green.shade50,
+                            Colors.green,
+                          ),
                         ),
-                        _buildSmallFeatureItem(
-                          'Forum',
-                          Icons.forum,
-                          Colors.brown.shade100,
-                          const Color(0xFF8B4513),
+                        InkWell(
+                          onTap: () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("[FEATURE] Forum isn't implemented yet"),
+                              ),
+                            );
+                          },
+                          child: _buildSmallFeatureItem(
+                            'Forum',
+                            Icons.forum,
+                            Colors.brown.shade100,
+                            const Color(0xFF8B4513),
+                          ),
                         ),
-                        _buildSmallFeatureItem(
-                          'Favorites',
-                          Icons.favorite,
-                          Colors.red.shade50,
-                          Colors.red,
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const FavoritesPage(),
+                              ),
+                            );
+                          },
+                          child: _buildSmallFeatureItem(
+                            'Favorites',
+                            Icons.favorite,
+                            Colors.red.shade50,
+                            Colors.red,
+                          ),
                         ),
                       ],
                     ),
