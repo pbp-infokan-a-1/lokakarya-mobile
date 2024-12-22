@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lokakarya_mobile/home/widgets/bubbletab.dart';
-import 'package:lokakarya_mobile/home/menu.dart';
+import 'package:lokakarya_mobile/widgets/bubbletab.dart';
+import 'package:lokakarya_mobile/home/screens/menu.dart';
 import 'package:provider/provider.dart';
 import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
 import 'package:lokakarya_mobile/auth/screens/login.dart';

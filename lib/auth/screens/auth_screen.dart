@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lokakarya_mobile/auth/screens/login.dart';
 import 'package:lokakarya_mobile/auth/screens/register.dart';
-import 'package:lokakarya_mobile/home/menu.dart';
+import 'package:lokakarya_mobile/home/screens/menu.dart';
 
 class AuthScreen extends StatelessWidget {
   const AuthScreen({super.key});

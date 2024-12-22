@@ -1,4 +1,4 @@
-import 'package:lokakarya_mobile/home/menu.dart';
+import 'package:lokakarya_mobile/home/screens/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
