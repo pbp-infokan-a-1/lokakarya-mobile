@@ -10,9 +10,6 @@ subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
 subprojects {
-    project.evaluationDependsOn(":app")
-}
-subprojects {
     afterEvaluate { project ->
         // check only for "com.android.library" to not modify
         // your "app" subproject. All plugins will have "com.android.library" plugin, and only your app "com.android.application"
@@ -26,6 +23,9 @@ subprojects {
             }
         }
     }
+}
+subprojects {
+    project.evaluationDependsOn(":app")
 }
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
