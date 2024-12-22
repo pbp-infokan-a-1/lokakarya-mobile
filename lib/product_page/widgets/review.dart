@@ -35,9 +35,9 @@ class ReviewWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(12.0), // Ensure shadows are not clipped
       child: Container(
-        width: 300.0,
+        width: 200.0,
         constraints: const BoxConstraints(
-          minHeight: 200.0,
+          minHeight: 170.0,
         ), // Make the card bigger
         padding: const EdgeInsets.all(12.0),
         decoration: BoxDecoration(
