@@ -236,7 +236,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                           try {
                             final request = context.read<CookieRequest>();
                             final response = await request.postJson(
-                              'http://127.0.0.1:8000/api/products/$productId/reviews/',
+                              'http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/api/products/$productId/reviews/',
                               jsonEncode({
                                 'rating': _localSelectedRating,
                                 'review': reviewText,
@@ -343,7 +343,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
           children: [
             CachedNetworkImage(
               imageUrl: widget.product.fields.image != null
-                  ? 'http://127.0.0.1:8000/static/${widget.product.fields.image}'
+                  ? 'http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/static/${widget.product.fields.image}'
                   : 'assets/images/placeholder_image.png',
               placeholder: (context, url) =>
                   const Center(child: CircularProgressIndicator()),
@@ -516,7 +516,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                                   child: ClipOval(
                                     child: CachedNetworkImage(
                                       imageUrl:
-                                          'http://127.0.0.1:8000/static/${store.fields.image}',
+                                          'http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/static/${store.fields.image}',
                                       fit: BoxFit.cover,
                                       placeholder: (context, url) =>
                                           const CircularProgressIndicator(),
@@ -690,7 +690,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                                               imageUrl: similarProduct
                                                           .fields.image !=
                                                       null
-                                                  ? 'http://127.0.0.1:8000/static/${similarProduct.fields.image}'
+                                                  ? 'http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/static/${similarProduct.fields.image}'
                                                   : 'assets/images/placeholder_image.png',
                                               width: double.infinity,
                                               height: double.infinity,

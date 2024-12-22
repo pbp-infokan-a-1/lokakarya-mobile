@@ -11,6 +11,8 @@ import 'package:provider/provider.dart';
 import '../provider/product_entry_provider.dart';
 import '../widgets/filter_chips.dart';
 import '../widgets/sort_chips.dart';
+import 'package:lokakarya_mobile/auth/screens/auth_screen.dart';
+import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
 
 class ProductEntryPage extends StatefulWidget {
   final int? initialCategoryId; // Add this line
@@ -53,32 +55,36 @@ class _ProductEntryPageState extends State<ProductEntryPage> {
   }
 
   void _onTabChange(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
-    if (_selectedIndex == 0) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MyHomePage(),
-        ),
-      );
-    } else if (_selectedIndex == 3) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const ProfileScreen(),
-        ),
-      );
-    } else if (_selectedIndex == 2) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const ForumEntryPage(),
-        ),
-      );
-    }
+      // If not authenticated and trying to access protected tabs
+      if (!authProvider.isAuthenticated && index > 0) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const AuthScreen()),
+        );
+        return;
+      } else {
+        setState(() {
+          _selectedIndex = index;
+        });
+        if (index == 0) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => MyHomePage()),
+          );
+        } else if (index == 3) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const ProfileScreen()),
+          );
+        } else if (index == 2) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const ForumEntryPage()),
+          );
+        }
+      }
   }
 
   void _onSearchChanged() {

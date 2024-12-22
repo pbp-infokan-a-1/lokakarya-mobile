@@ -49,7 +49,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
   Future<ProfileModel> fetchProfile(CookieRequest request) async {
     try {
       final response = await request.get(
-        'http://127.0.0.1:8000/userprofile/profile/${widget.username}/get/',
+        'http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/userprofile/profile/${widget.username}/get/',
       );
       
       // Check if response is error

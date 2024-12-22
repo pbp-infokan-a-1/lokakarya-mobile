@@ -9,7 +9,7 @@ mixin FavoriteMixin {
   Future<bool> checkIsFavorite(BuildContext context, String productId) async {
     try {
       final request = context.read<CookieRequest>();
-      final response = await request.get('http://127.0.0.1:8000/favourites/json/');
+      final response = await request.get('http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/favourites/json/');
       
       if (response is String) {
         final data = jsonDecode(response);

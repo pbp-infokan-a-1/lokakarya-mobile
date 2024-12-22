@@ -79,7 +79,7 @@ class _AddStatusScreenState extends State<AddStatusScreen> {
                     if (_formKey.currentState!.validate()) {
                       try {
                         final response = await request.post(
-                          'http://127.0.0.1:8000/userprofile/create-flutter/',
+                          'http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/userprofile/create-flutter/',
                           jsonEncode({
                             'title': _titleController.text,
                             'description': _descriptionController.text,

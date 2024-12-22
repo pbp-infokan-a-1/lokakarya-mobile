@@ -280,7 +280,7 @@ class ReviewWidget extends StatelessWidget {
                           try {
                             final response = await http.post(
                               Uri.parse(
-                                  'http://127.0.0.1:8000/api/products/$productId/edit_reviews/${review.pk}/'),
+                                  'http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/api/products/$productId/edit_reviews/${review.pk}/'),
                               headers: {
                                 'Content-Type': 'application/json',
                               },
@@ -359,7 +359,7 @@ class ReviewWidget extends StatelessWidget {
 
                 final request = context.read<CookieRequest>();
                 final response = await request.get(
-                  'http://127.0.0.1:8000/api/products/$productId/delete_reviews/$reviewId/',
+                  'http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/api/products/$productId/delete_reviews/$reviewId/',
                   // Override method to DELETE
                 );
 
