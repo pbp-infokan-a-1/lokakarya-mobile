@@ -1,19 +1,7 @@
-// To parse this JSON data, do
-//
-//     final category = categoryFromJson(jsonString);
-
-import 'dart:convert';
-
-List<Category> categoryFromJson(String str) =>
-    List<Category>.from(json.decode(str).map((x) => Category.fromJson(x)));
-
-String categoryToJson(List<Category> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
-
 class Category {
   final String model;
   final int pk;
-  final Fields fields;
+  final CategoryFields fields;
 
   Category({
     required this.model,
@@ -24,7 +12,7 @@ class Category {
   factory Category.fromJson(Map<String, dynamic> json) => Category(
         model: json["model"],
         pk: json["pk"],
-        fields: Fields.fromJson(json["fields"]),
+        fields: CategoryFields.fromJson(json["fields"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -32,16 +20,24 @@ class Category {
         "pk": pk,
         "fields": fields.toJson(),
       };
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Category && runtimeType == other.runtimeType && pk == other.pk;
+
+  @override
+  int get hashCode => pk.hashCode;
 }
 
-class Fields {
+class CategoryFields {
   final String name;
 
-  Fields({
+  CategoryFields({
     required this.name,
   });
 
-  factory Fields.fromJson(Map<String, dynamic> json) => Fields(
+  factory CategoryFields.fromJson(Map<String, dynamic> json) => CategoryFields(
         name: json["name"],
       );
 

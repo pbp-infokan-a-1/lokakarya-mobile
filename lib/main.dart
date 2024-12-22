@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
-import 'package:lokakarya_mobile/home/menu.dart';
+import 'package:lokakarya_mobile/home/screens/menu.dart';
 import 'package:lokakarya_mobile/product_page/provider/product_entry_provider.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';

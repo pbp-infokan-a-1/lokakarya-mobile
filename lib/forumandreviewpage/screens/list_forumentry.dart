@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:lokakarya_mobile/forumandreviewpage/models/forum_entry.dart';
 import 'package:lokakarya_mobile/forumandreviewpage/screens/forumentry_form.dart';
-import 'package:lokakarya_mobile/home/menu.dart';
-import 'package:lokakarya_mobile/home/widgets/bubbletab.dart';
+import 'package:lokakarya_mobile/home/screens/menu.dart';
+import 'package:lokakarya_mobile/widgets/bubbletab.dart';
 import 'package:lokakarya_mobile/product_page/screens/list_products.dart';
 import 'package:lokakarya_mobile/profile/screens/profile.dart';
 import 'package:lokakarya_mobile/forumandreviewpage/screens/comment_page.dart';
@@ -23,7 +23,7 @@ class _ForumEntryPageState extends State<ForumEntryPage> {
   Future<List<PostForum>> fetchPostForum(CookieRequest request) async {
     try {
       final response = await request
-          .get('http://127.0.0.1:8000/json/'); // Ganti IP sesuai server
+          .get('http://127.0.0.1:8000/forumjson/'); // Ganti IP sesuai server
       List<PostForum> listPostForum = [];
       for (var d in response) {
         if (d != null) {

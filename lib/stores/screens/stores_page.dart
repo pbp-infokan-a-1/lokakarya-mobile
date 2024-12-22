@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lokakarya_mobile/stores/screens/stores_detail.dart';
 import 'package:lokakarya_mobile/stores/screens/stores_edit.dart';
+import 'package:lokakarya_mobile/auth/screens/auth_screen.dart';
+import 'package:lokakarya_mobile/widgets/bubbletab.dart';
 import 'package:lokakarya_mobile/widgets/left_drawer.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +20,7 @@ class StoresPage extends StatefulWidget {
 class _StoresPageState extends State<StoresPage> {
   List<StoresModel> stores = [];
   bool isLoading = true;
+  int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -88,6 +91,19 @@ class _StoresPageState extends State<StoresPage> {
         );
       }
     }
+  }
+
+  void _onTabChange(int index) {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+      // If not authenticated and trying to access protected tabs
+      if (!authProvider.isAuthenticated && index > 0) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const AuthScreen()),
+        );
+        return;
+      }
   }
 
   // Function to launch URL
@@ -290,8 +306,12 @@ class _StoresPageState extends State<StoresPage> {
               child: const Icon(Icons.add),
             )
           : null,
+
+      bottomNavigationBar: BubbleTabBar(
+        selectedIndex: _selectedIndex,
+        onTabChange: _onTabChange,
+        isAuthenticated: authProvider.isAuthenticated,
+      ),
     );
   }
 }
-
-
