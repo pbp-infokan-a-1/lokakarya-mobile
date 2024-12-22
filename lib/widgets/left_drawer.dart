@@ -7,6 +7,9 @@ import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
 import 'package:lokakarya_mobile/home/screens/menu.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:lokakarya_mobile/auth/screens/auth_screen.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:lokakarya_mobile/auth/screens/auth_screen.dart';
+import 'package:lokakarya_mobile/forumandreviewpage/screens/list_forumentry.dart';
 
 class LeftDrawer extends StatelessWidget {
   const LeftDrawer({super.key});
@@ -81,11 +84,12 @@ class LeftDrawer extends StatelessWidget {
             leading: const Icon(Icons.forum),
             title: const Text('Forum & Review'),
             onTap: () {
-              ScaffoldMessenger.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(const SnackBar(
-                    content:
-                        Text("[FEATURE] Forum & Review isn't implemented yet")));
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ForumEntryPage(),
+                ),
+              );
             },
           ),
           ListTile(
