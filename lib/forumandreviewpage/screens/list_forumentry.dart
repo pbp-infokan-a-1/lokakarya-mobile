@@ -23,7 +23,7 @@ class _ForumEntryPageState extends State<ForumEntryPage> {
   Future<List<PostForum>> fetchPostForum(CookieRequest request) async {
     try {
       final response = await request
-          .get('http://127.0.0.1:8000/forumjson/'); // Ganti IP sesuai server
+          .get('http://127.0.0.1:8000/json/'); // Ganti IP sesuai server
       List<PostForum> listPostForum = [];
       for (var d in response) {
         if (d != null) {

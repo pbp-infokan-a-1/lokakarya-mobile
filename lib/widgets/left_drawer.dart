@@ -7,6 +7,8 @@ import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
 import 'package:lokakarya_mobile/home/screens/menu.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:lokakarya_mobile/auth/screens/auth_screen.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:lokakarya_mobile/auth/screens/auth_screen.dart';
 import 'package:lokakarya_mobile/forumandreviewpage/screens/list_forumentry.dart';
 import 'package:lokakarya_mobile/screens/admin_dashboard.dart';
 
