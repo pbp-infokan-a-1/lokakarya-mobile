@@ -18,30 +18,26 @@ class LeftDrawer extends StatelessWidget {
     return Drawer(
       child: ListView(
         children: [
-          const DrawerHeader(
-            decoration: BoxDecoration(
+          DrawerHeader(
+            decoration: const BoxDecoration(
               color: Color(0xFF8B4513),
             ),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  child: Image(
-                    image: AssetImage('assets/images/logo_lokakarya.png'),
-                    height: 50,
-                    fit: BoxFit.contain,
-                  ),
+                Image.asset(
+                  'assets/images/logo_lokakarya.png',
+                  height: 100,
+                  fit: BoxFit.contain,
                 ),
-                Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Text(
-                    "Discover Jepara's Finest Crafts",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.white,
-                      fontWeight: FontWeight.normal,
-                    ),
+                const SizedBox(height: 8),
+                const Text(
+                  "Discover Jepara's Finest Crafts",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.white,
+                    fontWeight: FontWeight.normal,
                   ),
                 ),
               ],

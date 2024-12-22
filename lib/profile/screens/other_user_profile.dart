@@ -4,6 +4,10 @@ import 'package:provider/provider.dart';
 import 'package:lokakarya_mobile/profile/models/profile_model.dart';
 import 'package:lokakarya_mobile/profile/screens/status.dart';
 import 'dart:convert';
+import 'package:lokakarya_mobile/home/menu.dart';
+import 'package:lokakarya_mobile/home/widgets/bubbletab.dart';
+import 'package:lokakarya_mobile/product_page/screens/list_products.dart';
+import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
 
 class OtherUserProfileScreen extends StatefulWidget {
   final String username;
@@ -18,6 +22,30 @@ class OtherUserProfileScreen extends StatefulWidget {
 }
 
 class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
+  int _selectedIndex = 3;  // Profile tab index
+
+  void _onTabChange(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    if (index == 0) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => MyHomePage()),
+      );
+    } else if (index == 1) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const ProductEntryPage()),
+      );
+    } else if (index == 2) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("[FEATURE] Forum & Review isn't implemented yet")),
+      );
+    }
+  }
+
   Future<ProfileModel> fetchProfile(CookieRequest request) async {
     try {
       final response = await request.get(
@@ -45,6 +73,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
+    final authProvider = Provider.of<AuthProvider>(context);  // Add this
 
     return Scaffold(
       appBar: AppBar(
@@ -89,68 +118,98 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                   const SizedBox(height: 8),
                   ElevatedButton(
                     onPressed: () => Navigator.pop(context),
-                    child: const Text('Go Back'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF8B4513),
+                    ),
+                    child: const Text(
+                      'Go Back',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ],
               ),
             );
           }
 
-          if (!snapshot.hasData) {
-            return const Center(
-              child: Text('Profile not found'),
-            );
-          }
-
           final profile = snapshot.data!;
           
           return SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Username
-                  Text(
-                    widget.username,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'TTMoons',
-                    ),
+            child: Column(
+              children: [
+                // Profile Header Section
+                Container(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    children: [
+                      // Profile Picture
+                      Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.green[100],
+                          border: Border.all(
+                            color: const Color(0xFF8B4513),
+                            width: 2,
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            widget.username[0].toUpperCase(),
+                            style: const TextStyle(
+                              fontSize: 32,
+                              color: Color(0xFF8B4513),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      // Username
+                      Text(
+                        widget.username,
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'TTMoons',
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      // Bio
+                      Text(
+                        profile.fields.bio.isEmpty ? 'No bio added yet' : profile.fields.bio,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey[600],
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 24),
+                    ],
                   ),
-                  const SizedBox(height: 8),
+                ),
 
-                  // Bio
-                  Text(
-                    profile.fields.bio.isEmpty ? 'No bio added yet' : profile.fields.bio,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Status Button
-                  Center(
+                // Status Section
+                if (!profile.fields.private) ...[
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                    width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: profile.fields.private 
-                          ? null 
-                          : () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => StatusModelPage(
-                                    username: widget.username,
-                                  ),
-                                ),
-                              );
-                            },
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => StatusModelPage(
+                              username: widget.username,
+                            ),
+                          ),
+                        );
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF8B4513),
-                        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(8),
                         ),
                       ),
                       child: const Text(
@@ -158,39 +217,61 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                ],
 
-                  // Private Account Notice
-                  if (profile.fields.private)
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Row(
-                        children: [
-                          Icon(Icons.lock, color: Colors.grey),
-                          SizedBox(width: 8),
-                          Text(
-                            'This account is private',
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontStyle: FontStyle.italic,
-                            ),
-                          ),
-                        ],
+                // Private Account Notice
+                if (profile.fields.private)
+                  Container(
+                    margin: const EdgeInsets.all(24),
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: Colors.grey[300]!,
                       ),
                     ),
-                ],
-              ),
+                    child: Column(
+                      children: [
+                        const Icon(
+                          Icons.lock,
+                          color: Colors.grey,
+                          size: 48,
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          'This Account is Private',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Follow this account to see their status and activities.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
             ),
           );
         },
+      ),
+      bottomNavigationBar: BubbleTabBar(
+        selectedIndex: _selectedIndex,
+        onTabChange: _onTabChange,
+        isAuthenticated: authProvider.isAuthenticated,
       ),
     );
   }

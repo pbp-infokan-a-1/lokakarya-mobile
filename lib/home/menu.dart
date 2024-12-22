@@ -234,11 +234,10 @@ class _MyHomePageState extends State<MyHomePage> {
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () {
-
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const StoresPage()),
-                );
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const StoresPage()),
+          );
         },
         child: Container(
           height: 80, // Fixed height for store cards
@@ -1060,11 +1059,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       TextButton(
                         onPressed: () {
-                          ScaffoldMessenger.of(context)
-                            ..hideCurrentSnackBar()
-                            ..showSnackBar(const SnackBar(
-                              content: Text("[FEATURE] Product Categories isn't implemented yet"),
-                            ));
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ProductEntryPage(),
+                            ),
+                          );
                         },
                         child: const Text('Show More'),
                       ),
@@ -1112,8 +1112,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const StoresPage()),
-                              );
+                            MaterialPageRoute(
+                              builder: (context) => const StoresPage(),
+                            ),
+                          );
                         },
                         child: const Text('Show More'),
                       ),
