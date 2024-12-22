@@ -4,6 +4,8 @@ import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:lokakarya_mobile/models/product_entry.dart';
 import 'package:lokakarya_mobile/models/store_entry.dart' as storeEntry;
 import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
+import 'package:lokakarya_mobile/admin_dashboard/screens/product_form.dart';
+import 'package:lokakarya_mobile/admin_dashboard/screens/store_form.dart';
 
 class AdminDashboardPage extends StatefulWidget {
   const AdminDashboardPage({super.key});
@@ -13,10 +15,12 @@ class AdminDashboardPage extends StatefulWidget {
 }
 
 class _AdminDashboardPageState extends State<AdminDashboardPage> {
+  bool _showAddOptions = false;
+
   Future<List<ProductEntry>> fetchProducts(CookieRequest request) async {
     try {
       final response = await request.get('http://127.0.0.1:8000/flutterproducts/');
-      print('Raw API Response: $response'); // Debug print
+      // print('Raw API Response: $response'); // Debug print
       
       if (response == null) {
         throw Exception('Response is null');
@@ -24,13 +28,13 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
 
       // Check if response is a List
       if (response is! List) {
-        print('Response type: ${response.runtimeType}'); // Debug print
+        // print('Response type: ${response.runtimeType}'); // Debug print
         throw Exception('Expected List but got ${response.runtimeType}');
       }
 
       return List<ProductEntry>.from(
         response.map((product) {
-          print('Processing product: $product'); // Debug print
+          // print('Processing product: $product'); // Debug print
           return ProductEntry.fromJson(product);
         })
       );
@@ -44,7 +48,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
 Future<List<storeEntry.StoreEntry>> fetchStores(CookieRequest request) async {
   try {
     final response = await request.get('http://127.0.0.1:8000/stores/');
-    print('Raw API Response: $response'); // Debug print
+    // print('Raw API Response: $response'); // Debug print
 
     // Validate response and extract the 'stores' key
     if (response == null || response['stores'] == null) {
@@ -122,7 +126,7 @@ Future<List<storeEntry.StoreEntry>> fetchStores(CookieRequest request) async {
                       itemCount: products.length,
                       itemBuilder: (context, index) {
                         final product = products[index];
-                        print('Displaying product: ${product.fields.name}'); // Debug print
+                        // print('Displaying product: ${product.fields.name}'); // Debug print
                         return Card(
                           child: ListTile(
                             title: Text(product.fields.name),
@@ -144,7 +148,7 @@ Future<List<storeEntry.StoreEntry>> fetchStores(CookieRequest request) async {
                       itemCount: stores.length,
                       itemBuilder: (context, index) {
                         final store = stores[index];
-                        print('Displaying store: ${store.fields.nama}'); // Debug print
+                        // print('Displaying store: ${store.fields.nama}'); // Debug print
                         return Card(
                           child: ListTile(
                             title: Text(store.fields.nama),
@@ -161,11 +165,44 @@ Future<List<storeEntry.StoreEntry>> fetchStores(CookieRequest request) async {
         },
       ),
       floatingActionButton: isSuperuser 
-          ? FloatingActionButton(
-              onPressed: () {
-                // Add your onPressed code here!
-              },
-              child: const Icon(Icons.add),
+          ? Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (_showAddOptions) ...[
+                  FloatingActionButton.extended(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => StoreForm()),
+                      );
+                    },
+                    label: const Text('Add Store'),
+                    icon: const Icon(Icons.store),
+                    backgroundColor: Colors.orange,
+                  ),
+                  const SizedBox(height: 8),
+                  FloatingActionButton.extended(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ProductForm()),
+                      );
+                    },
+                    label: const Text('Add Product'),
+                    icon: const Icon(Icons.add_shopping_cart),
+                    backgroundColor: Colors.orange,
+                  ),
+                  const SizedBox(height: 8),
+                ],
+                FloatingActionButton(
+                  onPressed: () {
+                    setState(() {
+                      _showAddOptions = !_showAddOptions;
+                    });
+                  },
+                  child: Icon(_showAddOptions ? Icons.close : Icons.add),
+                ),
+              ],
             )
           : null,
     );

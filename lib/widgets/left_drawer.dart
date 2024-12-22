@@ -7,7 +7,7 @@ import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
 import 'package:lokakarya_mobile/home/screens/menu.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:lokakarya_mobile/auth/screens/auth_screen.dart';
-import 'package:lokakarya_mobile/screens/admin_dashboard.dart';
+import 'package:lokakarya_mobile/admin_dashboard/screens/admin_dashboard.dart';
 
 class LeftDrawer extends StatelessWidget {
   const LeftDrawer({super.key});
