@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:lokakarya_mobile/forumandreviewpage/screens/list_forumentry.dart';
 import 'package:lokakarya_mobile/home/screens/menu.dart';
 import 'package:lokakarya_mobile/widgets/bubbletab.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -68,6 +69,13 @@ class _ProductEntryPageState extends State<ProductEntryPage> {
         context,
         MaterialPageRoute(
           builder: (context) => const ProfileScreen(),
+        ),
+      );
+    } else if (_selectedIndex == 2) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const ForumEntryPage(),
         ),
       );
     }

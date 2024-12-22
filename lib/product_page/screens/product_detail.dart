@@ -15,6 +15,7 @@ import 'package:lokakarya_mobile/profile/screens/profile.dart';
 import 'package:lokakarya_mobile/widgets/left_drawer.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:lokakarya_mobile/forumandreviewpage/screens/list_forumentry.dart';
 
 class ProductDetailPage extends StatefulWidget {
   final ProductEntry product;
@@ -82,6 +83,13 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const ProfileScreen()),
+      );
+    } else if (_selectedIndex == 2) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const ForumEntryPage(),
+        ),
       );
     }
   }
