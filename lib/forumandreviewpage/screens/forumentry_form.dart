@@ -65,7 +65,7 @@ class _ForumEntryFormPageState extends State<ForumEntryFormPage> {
                   },
                   validator: (String? value) {
                     if (value == null || value.isEmpty) {
-                      return "Title tidak boleh kosong!";
+                      return "Title tidak boleh kosong!!";
                     }
                     return null;
                   },
