@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
+import 'package:lokakarya_mobile/favorites/screens/favorites_mixin.dart';
 import 'package:lokakarya_mobile/home/screens/menu.dart';
-import 'package:lokakarya_mobile/widgets/bubbletab.dart';
 import 'package:lokakarya_mobile/models/product_entry.dart';
 import 'package:lokakarya_mobile/models/rating.dart';
 import 'package:lokakarya_mobile/models/store_entry.dart';
@@ -12,6 +12,7 @@ import 'package:lokakarya_mobile/product_page/provider/product_entry_provider.da
 import 'package:lokakarya_mobile/product_page/widgets/review.dart';
 import 'package:lokakarya_mobile/product_page/widgets/star_rating.dart';
 import 'package:lokakarya_mobile/profile/screens/profile.dart';
+import 'package:lokakarya_mobile/widgets/bubbletab.dart';
 import 'package:lokakarya_mobile/widgets/left_drawer.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
@@ -25,11 +26,14 @@ class ProductDetailPage extends StatefulWidget {
   _ProductDetailPageState createState() => _ProductDetailPageState();
 }
 
-class _ProductDetailPageState extends State<ProductDetailPage> {
+class _ProductDetailPageState extends State<ProductDetailPage>
+    with FavoriteMixin {
   int _selectedIndex = 1;
   // List of Ratings and Store for the product
   List<Rating> _ratings = [];
   List<StoreEntry> _stores = [];
+  bool _isFavorite = false;
+  bool _isLoading = true;
 
   // Scroll Controller for detecting scroll position
   final ScrollController _scrollController = ScrollController();
@@ -42,15 +46,40 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     _initializeRatings();
     _stores = Provider.of<ProductEntryProvider>(context, listen: false)
         .getStoresForProduct(widget.product);
+    _checkFavoriteStatus();
+  }
+
+  Future<void> _checkFavoriteStatus() async {
+    final isFav = await checkIsFavorite(context, widget.product.pk.toString());
+    setState(() {
+      _isFavorite = isFav;
+      _isLoading = false;
+    });
+  }
+
+  Future<void> _handleFavoriteToggle() async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    if (!authProvider.isAuthenticated) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please log in to add favorites.")),
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
+    try {
+      await toggleFavorite(context, widget.product.pk.toString(), _isFavorite);
+      setState(() => _isFavorite = !_isFavorite);
+    } finally {
+      setState(() => _isLoading = false);
+    }
   }
 
   void _initializeRatings() {
-    // Initialize _ratings from the product's existing ratings
     _ratings = List<Rating>.from(widget.product.fields.ratings);
   }
 
   void _scrollListener() {
-    // Optional: If you have a reason to adjust UI elements based on scroll offset
     double maxScroll = 250.0;
     double currentScroll = _scrollController.offset;
 
@@ -295,7 +324,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           ),
         ),
         backgroundColor: Theme.of(context).primaryColor,
-        // Only set elevation if you'd like the AppBar to have a shadow after a certain scroll offset
         elevation: _opacity > 0.5 ? 4.0 : 0.0,
       ),
       drawer: const LeftDrawer(),
@@ -305,7 +333,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         controller: _scrollController,
         child: Column(
           children: [
-            // Image Section: Expand or AspectRatio to display the image
             CachedNetworkImage(
               imageUrl: widget.product.fields.image != null
                   ? 'http://127.0.0.1:8000/static/${widget.product.fields.image}'
@@ -345,20 +372,19 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                           ),
                         ),
                       ),
-                      IconButton(
-                        icon: const Icon(
-                          Icons.favorite_border,
-                          color: Colors.pink,
-                          size: 30.0,
+                      ElevatedButton.icon(
+                        onPressed: _isLoading ? null : _handleFavoriteToggle,
+                        icon: Icon(
+                          _isFavorite ? Icons.favorite : Icons.favorite_border,
+                          color: _isFavorite ? Colors.red : null,
                         ),
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content:
-                                    Text("Added to favorites (placeholder).")),
-                          );
-                        },
-                        tooltip: 'Add to Favorites',
+                        label: Text(_isFavorite
+                            ? "Remove from Favorites"
+                            : "Add to Favorites"),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              _isFavorite ? Colors.grey[200] : null,
+                        ),
                       ),
                     ],
                   ),
