@@ -9,6 +9,10 @@ import 'package:provider/provider.dart';
 import 'package:lokakarya_mobile/stores/models/stores_entry.dart';
 import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:lokakarya_mobile/home/screens/menu.dart';
+import 'package:lokakarya_mobile/product_page/screens/list_products.dart';
+import 'package:lokakarya_mobile/forumandreviewpage/screens/list_forumentry.dart';
+import 'package:lokakarya_mobile/profile/screens/profile.dart';
 
 class StoresPage extends StatefulWidget {
   const StoresPage({super.key});
@@ -103,6 +107,31 @@ class _StoresPageState extends State<StoresPage> {
           MaterialPageRoute(builder: (context) => const AuthScreen()),
         );
         return;
+      } else {
+        setState(() {
+          _selectedIndex = index;
+        });
+        if (index == 0) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => MyHomePage()),
+          );
+        } else if (index == 1) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const ProductEntryPage()),
+          );
+        } else if (index == 2) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const ForumEntryPage()),
+          );
+        } else if (index == 3) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const ProfileScreen()),
+          );
+        }
       }
   }
 

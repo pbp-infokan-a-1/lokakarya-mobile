@@ -37,7 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
 
       final response = await request.get(
-        'http://127.0.0.1:8000/userprofile/show-json/',
+        'http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/userprofile/show-json/',
       );
       
       print("Response: $response");
@@ -56,26 +56,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _onTabChange(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
-    if (index == 0) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => MyHomePage()),
-      );
-    } else if (index == 1) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const ProductEntryPage()),
-      );
-    } else if (index == 2) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const ForumEntryPage()),
-      );
-    }
+      // If not authenticated and trying to access protected tabs
+      if (!authProvider.isAuthenticated && index > 0) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const AuthScreen()),
+        );
+        return;
+      } else {
+        setState(() {
+          _selectedIndex = index;
+        });
+        if (index == 0) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => MyHomePage()),
+          );
+        } else if (index == 1) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const ProductEntryPage()),
+          );
+        } else if (index == 2) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const ForumEntryPage()),
+          );
+        }
+      }
   }
 
   @override
@@ -282,7 +292,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         onChanged: (bool value) async {
                           try {
                             final response = await request.post(
-                              'http://127.0.0.1:8000/userprofile/profile/${request.jsonData['username']}/update_app/',
+                              'http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/userprofile/profile/${request.jsonData['username']}/update_app/',
                               jsonEncode({
                                 'bio': profile.fields.bio,
                                 'location': profile.fields.location,
@@ -320,22 +330,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         },
                       ),
                       _buildListTile(
-                        'Activities',
-                        '',
-                        onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("[FEATURE] Activities isn't implemented yet")),
-                          );
-                        },
-                      ),
-                      _buildListTile(
                         'Logout',
                         '',
                         textColor: Colors.red,
                         onTap: () async {
                           final request = context.read<CookieRequest>();
                           final response = await request.logout(
-                              "http://127.0.0.1:8000/auth/logout_app/");
+                              "http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/auth/logout_app/");
                           
                           if (context.mounted) {
                             if (response['status']) {

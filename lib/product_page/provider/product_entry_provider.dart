@@ -89,7 +89,7 @@ class ProductEntryProvider with ChangeNotifier {
 
     try {
       final response = await http.get(
-        Uri.parse('http://127.0.0.1:8000/flutterproducts/'),
+        Uri.parse('http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/flutterproducts/'),
       );
 
       if (response.statusCode == 200) {
@@ -158,7 +158,7 @@ class ProductEntryProvider with ChangeNotifier {
     try {
       final response = await http.put(
         Uri.parse(
-            'http://127.0.0.1:8000/api/products/$productId/edit_reviews/$reviewId/'),
+            'http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/api/products/$productId/edit_reviews/$reviewId/'),
         headers: {
           'Content-Type': 'application/json',
         },

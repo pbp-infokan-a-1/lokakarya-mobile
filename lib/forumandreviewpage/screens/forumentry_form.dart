@@ -6,9 +6,10 @@ import 'dart:convert';
 import 'package:lokakarya_mobile/forumandreviewpage/models/forum_entry.dart';
 
 class ForumEntryFormPage extends StatefulWidget {
-  final PostForum? forum;
+  final PostForum? forum; // Menambahkan parameter opsional untuk forum
 
-  const ForumEntryFormPage({super.key, this.forum});
+  const ForumEntryFormPage({Key? key, this.forum}) : super(key: key);
+
   @override
   State<ForumEntryFormPage> createState() => _ForumEntryFormPageState();
 }
@@ -17,15 +18,25 @@ class _ForumEntryFormPageState extends State<ForumEntryFormPage> {
   final _formKey = GlobalKey<FormState>();
   String _title = "";
   String _content = "";
+
+  @override
+  void initState() {
+    super.initState();
+    // Jika forum ada, isi form dengan data forum
+    if (widget.forum != null) {
+      _title = widget.forum!.fields.title;
+      _content = widget.forum!.fields.content;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
+
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text(
-            'Forum and Review',
-          ),
+        title: Center(
+          child: Text(widget.forum == null ? 'New Forum' : 'Edit Forum'),
         ),
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
@@ -39,6 +50,7 @@ class _ForumEntryFormPageState extends State<ForumEntryFormPage> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
+                  initialValue: _title,
                   decoration: InputDecoration(
                     hintText: "Title",
                     labelText: "Title",
@@ -62,6 +74,7 @@ class _ForumEntryFormPageState extends State<ForumEntryFormPage> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
+                  initialValue: _content,
                   decoration: InputDecoration(
                     hintText: "Content",
                     labelText: "Content",
@@ -82,40 +95,32 @@ class _ForumEntryFormPageState extends State<ForumEntryFormPage> {
                   },
                 ),
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.all(
-                          Theme.of(context).colorScheme.primary),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text(
+                      "Cancel",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          Theme.of(context).colorScheme.primary,
                     ),
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        // Kirim ke Django dan tunggu respons
-                        final response = await request.postJson(
-                          "http://127.0.0.1:8000/create_forum_flutter/",
-                          jsonEncode(<String, String>{
-                            'author': request.jsonData['username'], // Assuming username is stored in cookies
-                            'title': _title,
-                            'content': _content,
-                          }),
-                        );
-                        if (context.mounted) {
-                          if (response['status'] == 'success') {
-                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                              content: Text("Forum baru berhasil disimpan!"),
-                            ));
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context) => const ForumEntryPage()),
-                            );
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text(response['message'] ?? "Terdapat kesalahan, silakan coba lagi."),
-                            ));
-                          }
+                        if (widget.forum != null) {
+                          await _updateForum(request);
+                        } else {
+                          await _createForum(request);
                         }
                       }
                     },
@@ -124,12 +129,76 @@ class _ForumEntryFormPageState extends State<ForumEntryFormPage> {
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
-                ),
+                ],
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Future<void> _updateForum(CookieRequest request) async {
+    try {
+      final response = await request.post(
+        'http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/edit/${widget.forum!.pk}/',
+        jsonEncode(<String, String>{
+          'title': _title,
+          'content': _content,
+        }),
+      );
+
+      if (response['status'] == 'success') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Forum updated successfully.')),
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const ForumEntryPage()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(response['message'] ?? "Error updating forum."),
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: $e")),
+      );
+    }
+  }
+
+  Future<void> _createForum(CookieRequest request) async {
+    try {
+      final response = await request.post(
+        "http://127.0.0.1:8000/create-forum-flutter/",
+        jsonEncode(<String, String>{
+          'title': _title,
+          'content': _content,
+        }),
+      );
+
+      if (response['status'] == 'success') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Forum baru berhasil disimpan!")),
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const ForumEntryPage()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(response['message'] ?? "Error creating forum."),
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: $e")),
+      );
+    }
   }
 }

@@ -179,7 +179,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
                             try {
                               final response = await request.post(
-                                "http://127.0.0.1:8000/auth/register_app/",
+                                "http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/auth/register_app/",
                                 jsonEncode({
                                   'username': username,
                                   'password1': password1,

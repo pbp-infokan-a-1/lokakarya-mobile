@@ -1,169 +1,3 @@
-// import 'package:flutter/material.dart';
-// import 'package:lokakarya_mobile/forumandreviewpage/models/forum_entry.dart';
-// import 'package:provider/provider.dart';
-// import 'package:pbp_django_auth/pbp_django_auth.dart';
-// import 'package:lokakarya_mobile/forumandreviewpage/screens/forumentry_form.dart';
-// import 'package:lokakarya_mobile/home/menu.dart';
-// import 'package:lokakarya_mobile/home/widgets/bubbletab.dart';
-
-// class ForumEntryPage extends StatefulWidget {
-//   const ForumEntryPage({super.key});
-
-//   @override
-//   State<ForumEntryPage> createState() => _ForumEntryPageState();
-// }
-
-// class _ForumEntryPageState extends State<ForumEntryPage> {
-//   int _selectedIndex = 2; // Index awal untuk tab Forum & Review
-
-//   Future<List<PostForum>> fetchPostForum(CookieRequest request) async {
-//     try {
-//       final response = await request.get('http://127.0.0.1:8000/json/'); // Gunakan IP emulator
-//       List<PostForum> listPostForum = [];
-//       for (var d in response) {
-//         if (d != null) {
-//           listPostForum.add(PostForum.fromJson(d));
-//         }
-//       }
-//       return listPostForum;
-//     } catch (e) {
-//       print('Error fetching forum: $e');
-//       rethrow; // Tetap lempar error untuk FutureBuilder
-//     }
-//   }
-
-//   void _onTabChange(int index) {
-//     setState(() {
-//       _selectedIndex = index;
-//     });
-
-//     if (index == 0) {
-//       Navigator.pushReplacement(
-//         context,
-//         MaterialPageRoute(builder: (context) => MyHomePage()),
-//       );
-//     } else if (index == 1) {
-//       // Arahkan ke halaman lain jika ada
-//     } else if (index == 3) {
-//       // Arahkan ke halaman profil atau lainnya
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final request = context.watch<CookieRequest>();
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Forum & Review'),
-//       ),
-//       body: FutureBuilder<List<PostForum>>(
-//         future: fetchPostForum(request),
-//         builder: (context, AsyncSnapshot<List<PostForum>> snapshot) {
-//           if (snapshot.connectionState == ConnectionState.waiting) {
-//             return const Center(child: CircularProgressIndicator());
-//           } else if (snapshot.hasError) {
-//             return Center(
-//               child: Text(
-//                 'Error fetching data: ${snapshot.error}',
-//                 style: const TextStyle(fontSize: 16, color: Colors.red),
-//                 textAlign: TextAlign.center,
-//               ),
-//             );
-//           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-//             return const Center(
-//               child: Text(
-//                 'No forum entries available.',
-//                 style: TextStyle(fontSize: 20, color: Color(0xff59A5D8)),
-//               ),
-//             );
-//           } else {
-//             return ListView.builder(
-//               itemCount: snapshot.data!.length,
-//               itemBuilder: (_, index) {
-//                 final forum = snapshot.data![index];
-//                 return Card(
-//                   margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-//                   child: Padding(
-//                     padding: const EdgeInsets.all(16.0),
-//                     child: Column(
-//                       crossAxisAlignment: CrossAxisAlignment.start,
-//                       children: [
-//                         Row(
-//                           children: [
-//                             const CircleAvatar(
-//                               backgroundColor: Colors.grey,
-//                               radius: 16,
-//                             ),
-//                             const SizedBox(width: 8),
-//                             Text(
-//                               forum.fields.title,
-//                               style: const TextStyle(
-//                                 fontWeight: FontWeight.bold,
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-//                         const SizedBox(height: 8),
-//                         Text(
-//                           forum.fields.title,
-//                           style: const TextStyle(
-//                             fontSize: 18.0,
-//                             fontWeight: FontWeight.bold,
-//                           ),
-//                         ),
-//                         const SizedBox(height: 8),
-//                         Text(
-//                           forum.fields.content,
-//                           maxLines: 2,
-//                           overflow: TextOverflow.ellipsis,
-//                           style: const TextStyle(color: Colors.grey),
-//                         ),
-//                         const SizedBox(height: 8),
-//                         Row(
-//                           children: [
-//                             ElevatedButton.icon(
-//                               onPressed: () {},
-//                               icon: const Icon(Icons.arrow_upward, size: 16),
-//                               label: const Text('Vote'),
-//                               style: ElevatedButton.styleFrom(
-//                                 backgroundColor:
-//                                     Theme.of(context).colorScheme.primary,
-//                                 foregroundColor: Colors.white,
-//                               ),
-//                             ),
-//                             const SizedBox(width: 16),
-//                             Text(
-//                               "${forum.fields.title} comments",
-//                               style: const TextStyle(color: Colors.grey),
-//                             ),
-//                           ],
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 );
-//               },
-//             );
-//           }
-//         },
-//       ),
-//       floatingActionButton: FloatingActionButton(
-//         onPressed: () {
-//           Navigator.push(
-//             context,
-//             MaterialPageRoute(builder: (context) => const ForumEntryFormPage()),
-//           );
-//         },
-//         child: const Icon(Icons.add),
-//       ),
-//       bottomNavigationBar: BubbleTabBar(
-//         selectedIndex: _selectedIndex,
-//         onTabChange: _onTabChange,
-//         isAuthenticated: authProvider.isAuthenticated,
-//       ),
-//     );
-//   }
-// }
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
@@ -173,6 +7,7 @@ import 'package:lokakarya_mobile/home/screens/menu.dart';
 import 'package:lokakarya_mobile/widgets/bubbletab.dart';
 import 'package:lokakarya_mobile/product_page/screens/list_products.dart';
 import 'package:lokakarya_mobile/profile/screens/profile.dart';
+import 'package:lokakarya_mobile/forumandreviewpage/screens/comment_page.dart';
 
 class ForumEntryPage extends StatefulWidget {
   const ForumEntryPage({super.key});
@@ -188,7 +23,7 @@ class _ForumEntryPageState extends State<ForumEntryPage> {
   Future<List<PostForum>> fetchPostForum(CookieRequest request) async {
     try {
       final response = await request
-          .get('http://127.0.0.1:8000/forumjson/'); // Ganti IP sesuai server
+          .get('http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/json/'); // Ganti IP sesuai server
       List<PostForum> listPostForum = [];
       for (var d in response) {
         if (d != null) {
@@ -235,8 +70,6 @@ class _ForumEntryPageState extends State<ForumEntryPage> {
   }
 
   Widget _buildForumCard(PostForum forum) {
-    final request = context.watch<CookieRequest>();
-
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Padding(
@@ -244,7 +77,7 @@ class _ForumEntryPageState extends State<ForumEntryPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header with author
+            // Header with title and actions
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -253,21 +86,25 @@ class _ForumEntryPageState extends State<ForumEntryPage> {
                   style: const TextStyle(
                       fontWeight: FontWeight.bold, fontSize: 18),
                 ),
-                if (forum.fields.author == request.jsonData['user_id'])
-                  PopupMenuButton<String>(
-                    onSelected: (value) {
-                      if (value == 'edit') {
-                        _navigateToEditPage(forum);
-                      } else if (value == 'delete') {
-                        _deleteForum(forum.pk);
-                      }
-                    },
-                    itemBuilder: (BuildContext context) => [
-                      const PopupMenuItem(value: 'edit', child: Text('Edit')),
-                      const PopupMenuItem(
-                          value: 'delete', child: Text('Delete')),
-                    ],
-                  ),
+                PopupMenuButton<String>(
+                  onSelected: (value) {
+                    if (value == 'edit') {
+                      _navigateToEditPage(forum); // Edit action
+                    } else if (value == 'delete') {
+                      _confirmDelete(forum.pk); // Delete action with confirmation
+                    }
+                  },
+                  itemBuilder: (BuildContext context) => [
+                    const PopupMenuItem(
+                      value: 'edit',
+                      child: Text('Edit'),
+                    ),
+                    const PopupMenuItem(
+                      value: 'delete',
+                      child: Text('Delete'),
+                    ),
+                  ],
+                ),
               ],
             ),
             const SizedBox(height: 8),
@@ -290,7 +127,12 @@ class _ForumEntryPageState extends State<ForumEntryPage> {
                 ),
                 TextButton(
                   onPressed: () {
-                    // Navigate to comments page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CommentsPage(forum: forum),
+                      ),
+                    );
                   },
                   child: const Text('Comments'),
                 ),
@@ -308,14 +150,19 @@ class _ForumEntryPageState extends State<ForumEntryPage> {
       MaterialPageRoute(
         builder: (context) => ForumEntryFormPage(forum: forum),
       ),
-    );
+    ).then((result) {
+      if (result == true) {
+        setState(() {}); // Refresh data setelah kembali
+      }
+    });
   }
-  
 
   Future<void> _deleteForum(String forumId) async {
     final request = context.read<CookieRequest>();
-    final response =
-        await request.post('http://127.0.0.1:8000/delete/$forumId/', {});
+    final response = await request.post(
+      'http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/delete/$forumId/',
+      {}, // Payload kosong untuk DELETE
+    );
 
     if (response['status'] == 'success') {
       setState(() {
@@ -326,27 +173,56 @@ class _ForumEntryPageState extends State<ForumEntryPage> {
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Error deleting forum.')),
+        SnackBar(content: Text(response['message'] ?? 'Error deleting forum.')),
       );
     }
   }
 
+  void _confirmDelete(String forumId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Delete'),
+          content: const Text('Are you sure you want to delete this forum?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Tutup dialog
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Tutup dialog
+                _deleteForum(forumId); // Jalankan fungsi delete
+              },
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Future<void> _upvoteForum(String forumId) async {
     final request = context.read<CookieRequest>();
-    final response =
-        await request.post('http://127.0.0.1:8000/upvote/$forumId/', {});
+    final response = await request.post(
+      'http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/upvote/$forumId/',
+      {}, // Payload kosong untuk POST
+    );
 
     if (response['status'] == 'success') {
       setState(() {
         final forum = _cachedForums.firstWhere((forum) => forum.pk == forumId);
-        forum.fields.totalUpvotes = response['upvotes'];
+        forum.fields.totalUpvotes += 1; // Tambahkan +1 pada upvotes
       });
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Forum upvoted successfully.')),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Error upvoting forum.')),
+        SnackBar(content: Text(response['message'] ?? 'Error upvoting forum.')),
       );
     }
   }

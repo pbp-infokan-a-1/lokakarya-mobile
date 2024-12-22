@@ -15,7 +15,7 @@ class LeftDrawer extends StatelessWidget {
 
   Future<bool> checkSuperuserStatus(CookieRequest request) async {
     try {
-      final response = await request.get('http://127.0.0.1:8000/is_superuser/');
+      final response = await request.get('http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/is_superuser/');
       return response['is_superuser'] ?? false;
     } catch (e) {
       print('Error checking superuser status: $e');
@@ -149,7 +149,7 @@ class LeftDrawer extends StatelessWidget {
               if (isAuthenticated) {
                 final request = context.read<CookieRequest>();
                 final response = await request
-                    .logout("http://127.0.0.1:8000/auth/logout_app/");
+                    .logout("http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/auth/logout_app/");
 
                 if (context.mounted) {
                   if (response['status']) {

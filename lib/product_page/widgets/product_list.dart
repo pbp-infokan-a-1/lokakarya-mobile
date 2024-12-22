@@ -79,7 +79,7 @@ class _ProductListState extends State<ProductList> with FavoriteMixin {
   }
 
   Widget _buildProductCard(BuildContext context, ProductEntry product) {
-    const String BASE_URL = 'http://127.0.0.1:8000/static/';
+    const String BASE_URL = 'http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/static/';
     final bool isFavorite = favoriteProductIds.contains(product.pk.toString());
 
     return Padding(
@@ -213,20 +213,16 @@ class _ProductListState extends State<ProductList> with FavoriteMixin {
   Widget build(BuildContext context) {
     return Consumer<ProductEntryProvider>(
       builder: (context, productProvider, child) {
-        if (productProvider.isLoading || _isFetching) {
+        if (productProvider.isLoading) {
           return const Center(child: CircularProgressIndicator());
-        }
-
-        if (productProvider.error != null) {
+        } else if (productProvider.error != null) {
           return Center(
             child: Text(
               'Error: ${productProvider.error}',
               style: const TextStyle(color: Colors.red, fontSize: 16),
             ),
           );
-        }
-
-        if (productProvider.filteredProducts.isEmpty) {
+        } else if (productProvider.filteredProducts.isEmpty) {
           return Center(
             child: Text(
               productProvider.searchQuery.isEmpty

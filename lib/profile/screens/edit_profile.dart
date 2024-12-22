@@ -229,7 +229,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   'user': widget.profile.fields.user,
                                 })}');
                                 final response = await request.post(
-                                  'http://127.0.0.1:8000/userprofile/profile/${request.jsonData['username']}/update_app/',
+                                  'http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/userprofile/profile/${request.jsonData['username']}/update_app/',
                                   jsonEncode({
                                     'bio': _bioController.text,
                                     'location': _locationController.text,

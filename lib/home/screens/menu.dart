@@ -290,7 +290,7 @@ class _MyHomePageState extends State<MyHomePage> {
     try {
       final request = context.read<CookieRequest>();
       final response = await request.get(
-        'http://127.0.0.1:8000/search_mobile/?q=$query',
+        'http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/search_mobile/?q=$query',
       );
 
       if (response != null) {
