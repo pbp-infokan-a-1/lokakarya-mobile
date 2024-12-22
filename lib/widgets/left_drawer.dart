@@ -7,13 +7,26 @@ import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
 import 'package:lokakarya_mobile/home/menu.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:lokakarya_mobile/auth/screens/auth_screen.dart';
+import 'package:lokakarya_mobile/screens/admin_dashboard.dart';
 
 class LeftDrawer extends StatelessWidget {
   const LeftDrawer({super.key});
 
+  Future<bool> checkSuperuserStatus(CookieRequest request) async {
+    try {
+      final response = await request.get('http://127.0.0.1:8000/is_superuser/');
+      return response['is_superuser'] ?? false;
+    } catch (e) {
+      print('Error checking superuser status: $e');
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final isAuthenticated = Provider.of<AuthProvider>(context).isAuthenticated;
+    final request = context.watch<CookieRequest>();
+    final authProvider = Provider.of<AuthProvider>(context);
 
     return Drawer(
       child: ListView(
@@ -100,6 +113,33 @@ class LeftDrawer extends StatelessWidget {
               );
             },
           ),
+          FutureBuilder<bool>(
+            future: checkSuperuserStatus(request),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const ListTile(
+                  leading: CircularProgressIndicator(),
+                  title: Text('Checking superuser status...'),
+                );
+              } else if (snapshot.hasError || !snapshot.data!) {
+                return const SizedBox.shrink();
+              } else {
+                authProvider.setSuperuser(snapshot.data!);
+                return ListTile(
+                  leading: const Icon(Icons.admin_panel_settings),
+                  title: const Text('Admin Dashboard'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AdminDashboardPage(),
+                      ),
+                    );
+                  },
+                );
+              }
+            },
+          ),
           ListTile(
             leading: const Icon(Icons.logout),
             title: Text(isAuthenticated ? 'Logout' : 'Login'),
@@ -138,4 +178,4 @@ class LeftDrawer extends StatelessWidget {
       ),
     );
   }
-} 
+}

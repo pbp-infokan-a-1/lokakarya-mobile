@@ -33,35 +33,35 @@ class StoreEntry {
 }
 
 class Fields {
-    String nama;
-    HariBuka hariBuka;
-    String alamat;
-    String email;
-    String telepon;
-    String image;
-    String gmapsLink;
+  String nama;
+  HariBuka hariBuka;
+  String alamat;
+  String email;
+  String telepon;
+  String? image;
+  String gmapsLink;
 
-    Fields({
-        required this.nama,
-        required this.hariBuka,
-        required this.alamat,
-        required this.email,
-        required this.telepon,
-        required this.image,
-        required this.gmapsLink,
-    });
+  Fields({
+    required this.nama,
+    required this.hariBuka,
+    required this.alamat,
+    required this.email,
+    required this.telepon,
+    this.image,
+    required this.gmapsLink,
+  });
 
-    factory Fields.fromJson(Map<String, dynamic> json) => Fields(
-        nama: json["nama"],
-        hariBuka: hariBukaValues.map[json["hari_buka"]]!,
-        alamat: json["alamat"],
-        email: json["email"],
-        telepon: json["telepon"],
+  factory Fields.fromJson(Map<String, dynamic> json) => Fields(
+        nama: json["nama"] ?? "Unknown",
+        hariBuka: hariBukaValues.map[json["hari_buka"]] ?? HariBuka.SENIN_JUMAT,
+        alamat: json["alamat"] ?? "Unknown Address",
+        email: json["email"] ?? "Unknown Email",
+        telepon: json["telepon"] ?? "Unknown Phone",
         image: json["image"],
-        gmapsLink: json["gmaps_link"],
-    );
+        gmapsLink: json["gmaps_link"] ?? "Unknown Link",
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "nama": nama,
         "hari_buka": hariBukaValues.reverse[hariBuka],
         "alamat": alamat,
@@ -69,8 +69,9 @@ class Fields {
         "telepon": telepon,
         "image": image,
         "gmaps_link": gmapsLink,
-    };
+      };
 }
+
 
 enum HariBuka {
     SENIN_JUMAT,
