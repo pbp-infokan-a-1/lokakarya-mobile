@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
-import 'package:lokakarya_mobile/auth/screens/login.dart';
 import 'package:lokakarya_mobile/home/screens/menu.dart';
 import 'package:lokakarya_mobile/product_page/widgets/product_list.dart';
+import 'package:lokakarya_mobile/profile/screens/profile.dart';
 import 'package:lokakarya_mobile/widgets/bubbletab.dart';
 import 'package:lokakarya_mobile/widgets/left_drawer.dart';
 import 'package:provider/provider.dart';
@@ -70,7 +70,7 @@ class _ProductEntryPageState extends State<ProductEntryPage> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => const LoginApp(),
+          builder: (context) => const ProfileScreen(),
         ),
       );
     }
@@ -87,6 +87,7 @@ class _ProductEntryPageState extends State<ProductEntryPage> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
     final productProvider = Provider.of<ProductEntryProvider>(context);
     final allProductNames =
         productProvider.products.map((p) => p.fields.name).toList();
@@ -100,7 +101,7 @@ class _ProductEntryPageState extends State<ProductEntryPage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(60.0),
           child: Padding(
@@ -160,7 +161,7 @@ class _ProductEntryPageState extends State<ProductEntryPage> {
       bottomNavigationBar: BubbleTabBar(
         selectedIndex: _selectedIndex,
         onTabChange: _onTabChange,
-        isAuthenticated: AuthProvider().isAuthenticated,
+        isAuthenticated: authProvider.isAuthenticated,
       ),
     );
   }

@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
-import 'package:lokakarya_mobile/auth/screens/login.dart';
 import 'package:lokakarya_mobile/favorites/screens/favorites_mixin.dart';
 import 'package:lokakarya_mobile/home/screens/menu.dart';
 import 'package:lokakarya_mobile/models/product_entry.dart';
@@ -12,6 +11,7 @@ import 'package:lokakarya_mobile/models/store_entry.dart';
 import 'package:lokakarya_mobile/product_page/provider/product_entry_provider.dart';
 import 'package:lokakarya_mobile/product_page/widgets/review.dart';
 import 'package:lokakarya_mobile/product_page/widgets/star_rating.dart';
+import 'package:lokakarya_mobile/profile/screens/profile.dart';
 import 'package:lokakarya_mobile/widgets/bubbletab.dart';
 import 'package:lokakarya_mobile/widgets/left_drawer.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
@@ -110,7 +110,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
     } else if (_selectedIndex == 1) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => LoginApp()),
+        MaterialPageRoute(builder: (context) => const ProfileScreen()),
       );
     }
   }
@@ -323,7 +323,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         elevation: _opacity > 0.5 ? 4.0 : 0.0,
       ),
       drawer: const LeftDrawer(),
