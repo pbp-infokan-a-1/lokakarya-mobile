@@ -1,6 +1,7 @@
 # LokaKarya - Aplikasi Informasi Kerajinan Tangan di Kota Jepara
 
-Tautan untuk menuju Lokakarya -> [http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/](http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/)
+Tautan untuk menuju Lokakarya -> [http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/](http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/)<br>
+Tautan untuk instalasi apk LokaKarya -> [App Lokakarya](https://install.appcenter.ms/orgs/PBP-A-01/apps/LokaKarya/releases/1)
 Tautan menuju video demo -> [https://youtu.be/QE8xsbePQgg]
 
 ## Nama-nama Anggota Kelompok
@@ -91,3 +92,5 @@ List initial dataset dapat diakses pada tautan berikut ->  [ristek.link/LokaKary
 
 ### 5. **Deployment dan Pemantauan**
    Koneksi ke web service terus dipantau untuk memastikan aplikasi berjalan dengan lancar. Kami memantau kinerja API dan waktu respons untuk memastikan sistem tidak terganggu.
+
+[![Build status](https://build.appcenter.ms/v0.1/apps/7c327f13-1aee-414c-a408-b78e80000e0b/branches/master/badge)](https://appcenter.ms)
