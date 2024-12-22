@@ -21,5 +21,4 @@ class AuthProvider extends ChangeNotifier {
     _isSuperuser = value;
     notifyListeners();
   }
-
 }

@@ -677,6 +677,38 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  superuser:
+    dependency: "direct main"
+    description:
+      name: superuser
+      sha256: d1bf2f1a368b3cb205c4b5f329940fbd8d4a977311a5ca6570ccf1c776d48615
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
+  superuser_interfaces:
+    dependency: transitive
+    description:
+      name: superuser_interfaces
+      sha256: "483e04fc06f00035a94c77d35db6d44afe4b5022171c50bf58db3e267495a0b3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
+  superuser_plugin_unix:
+    dependency: transitive
+    description:
+      name: superuser_plugin_unix
+      sha256: "99d11ecf70e07858bca851fb64885419e724225fba742904044d87b696c43b5c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
+  superuser_plugin_windows:
+    dependency: transitive
+    description:
+      name: superuser_plugin_windows
+      sha256: "4c2122238515d8f1b04e8cf1c8cd1c2c577a13647b8711c1186c2637c341e6d2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.3"
   synchronized:
     dependency: transitive
     description:
