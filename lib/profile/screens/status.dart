@@ -66,7 +66,7 @@ class _StatusModelPageState extends State<StatusModelPage> {
           } else if (!snapshot.hasData || snapshot.data.isEmpty) {
             return const Center(
               child: Text(
-                'Belum ada status pada profile anda.',
+                'Belum ada status pada profile.',
                 style: TextStyle(fontSize: 20, color: Color(0xff59A5D8)),
               ),
             );
