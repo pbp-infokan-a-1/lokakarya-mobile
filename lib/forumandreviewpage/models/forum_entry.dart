@@ -1,25 +1,25 @@
 // To parse this JSON data, do
 //
-//     final forumEntry = forumEntryFromJson(jsonString);
+//     final PostForum = PostForumFromJson(jsonString);
 
 import 'dart:convert';
 
-List<ForumEntry> forumEntryFromJson(String str) => List<ForumEntry>.from(json.decode(str).map((x) => ForumEntry.fromJson(x)));
+List<PostForum> postForumFromJson(String str) => List<PostForum>.from(json.decode(str).map((x) => PostForum.fromJson(x)));
 
-String forumEntryToJson(List<ForumEntry> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String postForumToJson(List<PostForum> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class ForumEntry {
+class PostForum {
     String model;
     String pk;
     Fields fields;
 
-    ForumEntry({
+    PostForum({
         required this.model,
         required this.pk,
         required this.fields,
     });
 
-    factory ForumEntry.fromJson(Map<String, dynamic> json) => ForumEntry(
+    factory PostForum.fromJson(Map<String, dynamic> json) => PostForum(
         model: json["model"],
         pk: json["pk"],
         fields: Fields.fromJson(json["fields"]),

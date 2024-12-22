@@ -52,11 +52,6 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.primary,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      drawer: BubbleTabBar(
-        selectedIndex: 0,
-        isAuthenticated: true, // Sesuaikan dengan status autentikasi
-        onTabChange: (index) => {}, // Akan ditangani di BottomNavigationBar
-      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
