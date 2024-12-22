@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lokakarya_mobile/home/widgets/bubbletab.dart';
-import 'package:lokakarya_mobile/home/menu.dart';
+import 'package:lokakarya_mobile/widgets/bubbletab.dart';
+import 'package:lokakarya_mobile/home/screens/menu.dart';
 import 'package:provider/provider.dart';
 import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
 import 'package:lokakarya_mobile/auth/screens/login.dart';
@@ -11,6 +11,8 @@ import 'package:lokakarya_mobile/widgets/left_drawer.dart';
 import 'package:lokakarya_mobile/profile/screens/edit_profile.dart';
 import 'package:lokakarya_mobile/auth/screens/auth_screen.dart';
 import 'package:lokakarya_mobile/profile/screens/status.dart';
+import 'package:lokakarya_mobile/favorites/screens/favorites_page.dart';
+import 'package:lokakarya_mobile/product_page/screens/list_products.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -20,7 +22,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  int _selectedIndex = 2;
+  int _selectedIndex = 3;
 
   Future<List<ProfileModel>> fetchProfile(CookieRequest request) async {
     try {
@@ -63,6 +65,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
         MaterialPageRoute(builder: (context) => MyHomePage()),
       );
     } else if (index == 1) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const ProductEntryPage()),
+      );
+    } else if (index == 2) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("[FEATURE] Forum & Review isn't implemented yet")),
       );
@@ -238,8 +245,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         'My Favorites',
                         '',
                         onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("[FEATURE] Favorites isn't implemented yet")),
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const FavoritesPage(),
+                            ),
                           );
                         },
                       ),

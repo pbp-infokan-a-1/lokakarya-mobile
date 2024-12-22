@@ -4,7 +4,7 @@ import 'package:lokakarya_mobile/product_page/screens/list_products.dart';
 import 'package:lokakarya_mobile/stores/screens/stores_page.dart';
 import 'package:provider/provider.dart';
 import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
-import 'package:lokakarya_mobile/home/menu.dart';
+import 'package:lokakarya_mobile/home/screens/menu.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:lokakarya_mobile/auth/screens/auth_screen.dart';
 import 'package:lokakarya_mobile/admin_dashboard/admin_dashboard.dart';
@@ -31,30 +31,26 @@ class LeftDrawer extends StatelessWidget {
     return Drawer(
       child: ListView(
         children: [
-          const DrawerHeader(
-            decoration: BoxDecoration(
+          DrawerHeader(
+            decoration: const BoxDecoration(
               color: Color(0xFF8B4513),
             ),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  child: Image(
-                    image: AssetImage('assets/images/logo_lokakarya.png'),
-                    height: 50,
-                    fit: BoxFit.contain,
-                  ),
+                Image.asset(
+                  'assets/images/logo_lokakarya.png',
+                  height: 100,
+                  fit: BoxFit.contain,
                 ),
-                Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Text(
-                    "Discover Jepara's Finest Crafts",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.white,
-                      fontWeight: FontWeight.normal,
-                    ),
+                const SizedBox(height: 8),
+                const Text(
+                  "Discover Jepara's Finest Crafts",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.white,
+                    fontWeight: FontWeight.normal,
                   ),
                 ),
               ],

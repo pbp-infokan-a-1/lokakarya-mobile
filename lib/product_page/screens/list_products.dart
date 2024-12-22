@@ -1,8 +1,8 @@
 // lib/home/product_entry_page.dart
 
 import 'package:flutter/material.dart';
-import 'package:lokakarya_mobile/home/menu.dart';
-import 'package:lokakarya_mobile/home/widgets/bubbletab.dart';
+import 'package:lokakarya_mobile/home/screens/menu.dart';
+import 'package:lokakarya_mobile/widgets/bubbletab.dart';
 import 'package:lokakarya_mobile/product_page/widgets/product_list.dart';
 import 'package:lokakarya_mobile/profile/screens/profile.dart';
 import 'package:provider/provider.dart';

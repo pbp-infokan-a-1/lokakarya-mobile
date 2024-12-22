@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
 import 'package:lokakarya_mobile/auth/screens/auth_screen.dart';
-import 'package:lokakarya_mobile/home/widgets/bubbletab.dart';
+import 'package:lokakarya_mobile/widgets/bubbletab.dart';
 import 'package:lokakarya_mobile/product_page/screens/list_products.dart';
 import 'package:lokakarya_mobile/profile/screens/profile.dart';
 import 'package:lokakarya_mobile/stores/screens/stores_page.dart';
 import 'package:lokakarya_mobile/widgets/left_drawer.dart';
+import 'package:lokakarya_mobile/favorites/screens/favorites_page.dart';
 import 'package:provider/provider.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:lokakarya_mobile/product_page/widgets/product_detail.dart';
+import 'package:lokakarya_mobile/stores/screens/stores_detail.dart';
+import 'package:lokakarya_mobile/profile/screens/other_user_profile.dart';
+import 'package:lokakarya_mobile/models/product_entry.dart';
+import 'package:lokakarya_mobile/stores/models/stores_entry.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({super.key});
@@ -227,11 +234,10 @@ class _MyHomePageState extends State<MyHomePage> {
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () {
-
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const StoresPage()),
-                );
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const StoresPage()),
+          );
         },
         child: Container(
           height: 80, // Fixed height for store cards
@@ -644,6 +650,234 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  Future<void> _performSearch(String query) async {
+    if (query.isEmpty) return;
+
+    try {
+      final request = context.read<CookieRequest>();
+      final response = await request.get(
+        'http://127.0.0.1:8000/search_mobile/?q=$query',
+      );
+
+      if (response != null) {
+        // Convert the response data to match the expected models
+        final products = (response['products'] as List?)?.map((product) {
+          try {
+            return ProductEntry.fromJson(product);
+          } catch (e) {
+            print('Error parsing product: $e');
+            return null;
+          }
+        }).whereType<ProductEntry>().toList() ?? [];
+
+        final stores = (response['stores'] as List?)?.map((store) {
+          try {
+            return StoresModel.fromJson(store);
+          } catch (e) {
+            print('Error parsing store: $e');
+            return null;
+          }
+        }).whereType<StoresModel>().toList() ?? [];
+
+        final profiles = response['profiles'] as List? ?? [];
+
+        // Show search results in a modal bottom sheet
+        if (!mounted) return;
+        showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          builder: (context) => _buildSearchResults({
+            'products': products,
+            'stores': stores,
+            'profiles': profiles,
+          }),
+        );
+      }
+    } catch (e, stackTrace) {
+      print('Search error: $e\n$stackTrace');
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error performing search: $e')),
+      );
+    }
+  }
+
+  Widget _buildSearchResults(Map<String, dynamic> results) {
+    return DraggableScrollableSheet(
+      initialChildSize: 0.9,
+      minChildSize: 0.5,
+      maxChildSize: 0.9,
+      builder: (_, controller) => Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Search Results',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'TTMoons',
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: ListView(
+                controller: controller,
+                children: [
+                  if (results['products'] != null && results['products'].isNotEmpty) ...[
+                    const Text(
+                      'Products',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'TTMoons',
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    ...List.generate(
+                      results['products'].length,
+                      (index) => _buildSearchResultTile(
+                        (results['products'][index] as ProductEntry).fields.name,
+                        (results['products'][index] as ProductEntry).fields.description,
+                        Icons.shopping_bag,
+                        () {
+                          Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProductDetailPage(
+                                product: results['products'][index] as ProductEntry,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                  if (results['stores'] != null && results['stores'].isNotEmpty) ...[
+                    const Text(
+                      'Stores',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'TTMoons',
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    ...List.generate(
+                      results['stores'].length,
+                      (index) => _buildSearchResultTile(
+                        (results['stores'][index] as StoresModel).nama,
+                        'Store',
+                        Icons.store,
+                        () {
+                          Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => StoresProductDetail(
+                                store: results['stores'][index] as StoresModel,
+                                isSuperuser: false,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                  if (results['profiles'] != null && results['profiles'].isNotEmpty) ...[
+                    const Text(
+                      'Profiles',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'TTMoons',
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    ...List.generate(
+                      results['profiles'].length,
+                      (index) => _buildSearchResultTile(
+                        results['profiles'][index]['username'] ?? 'Unknown User',
+                        results['profiles'][index]['bio'] ?? '',
+                        Icons.person,
+                        () {
+                          Navigator.pop(context); // Close search results
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => OtherUserProfileScreen(
+                                username: results['profiles'][index]['username'],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                  if ((results['products']?.isEmpty ?? true) && 
+                      (results['stores']?.isEmpty ?? true) && 
+                      (results['profiles']?.isEmpty ?? true)) ...[
+                    const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: Text(
+                          'No results found',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSearchResultTile(
+    String title,
+    String subtitle,
+    IconData icon,
+    VoidCallback onTap,
+  ) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8),
+      child: ListTile(
+        leading: Icon(icon),
+        title: Text(
+          title,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
+        ),
+        subtitle: Text(
+          subtitle,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
+        ),
+        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+        onTap: onTap,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
@@ -668,6 +902,27 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Add Search Bar
+            Container(
+              padding: const EdgeInsets.all(16.0),
+              child: TextField(
+                onSubmitted: (value) => _performSearch(value),
+                decoration: InputDecoration(
+                  hintText: 'Search products, stores, or profiles...',
+                  prefixIcon: const Icon(Icons.search),
+                  suffixIcon: const Icon(Icons.keyboard_return),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide.none,
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey[200],
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                ),
+                textInputAction: TextInputAction.search,
+              ),
+            ),
+
             // Promo Banner Section
             Container(
               height: 180,
@@ -715,29 +970,68 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: ListView(
                       scrollDirection: Axis.horizontal,
                       children: [
-                        _buildSmallFeatureItem(
-                          'Product',
-                          Icons.shopping_bag,
-                          Colors.brown.shade50,
-                          const Color(0xFF8B4513),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ProductEntryPage(),
+                              ),
+                            );
+                          },
+                          child: _buildSmallFeatureItem(
+                            'Product',
+                            Icons.shopping_bag,
+                            Colors.brown.shade50,
+                            const Color(0xFF8B4513),
+                          ),
                         ),
-                        _buildSmallFeatureItem(
-                          'Store',
-                          Icons.store,
-                          Colors.green.shade50,
-                          Colors.green,
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const StoresPage(),
+                              ),
+                            );
+                          },
+                          child: _buildSmallFeatureItem(
+                            'Store',
+                            Icons.store,
+                            Colors.green.shade50,
+                            Colors.green,
+                          ),
                         ),
-                        _buildSmallFeatureItem(
-                          'Forum',
-                          Icons.forum,
-                          Colors.brown.shade100,
-                          const Color(0xFF8B4513),
+                        InkWell(
+                          onTap: () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("[FEATURE] Forum isn't implemented yet"),
+                              ),
+                            );
+                          },
+                          child: _buildSmallFeatureItem(
+                            'Forum',
+                            Icons.forum,
+                            Colors.brown.shade100,
+                            const Color(0xFF8B4513),
+                          ),
                         ),
-                        _buildSmallFeatureItem(
-                          'Favorites',
-                          Icons.favorite,
-                          Colors.red.shade50,
-                          Colors.red,
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const FavoritesPage(),
+                              ),
+                            );
+                          },
+                          child: _buildSmallFeatureItem(
+                            'Favorites',
+                            Icons.favorite,
+                            Colors.red.shade50,
+                            Colors.red,
+                          ),
                         ),
                       ],
                     ),
@@ -765,11 +1059,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       TextButton(
                         onPressed: () {
-                          ScaffoldMessenger.of(context)
-                            ..hideCurrentSnackBar()
-                            ..showSnackBar(const SnackBar(
-                              content: Text("[FEATURE] Product Categories isn't implemented yet"),
-                            ));
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ProductEntryPage(),
+                            ),
+                          );
                         },
                         child: const Text('Show More'),
                       ),
@@ -817,8 +1112,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const StoresPage()),
-                              );
+                            MaterialPageRoute(
+                              builder: (context) => const StoresPage(),
+                            ),
+                          );
                         },
                         child: const Text('Show More'),
                       ),

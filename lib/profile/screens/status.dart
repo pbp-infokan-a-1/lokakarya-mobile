@@ -7,7 +7,12 @@ import 'add_status.dart';
 import 'package:http/http.dart' as http;
 
 class StatusModelPage extends StatefulWidget {
-  const StatusModelPage({super.key});
+  final String? username;
+
+  const StatusModelPage({
+    super.key,
+    this.username,
+  });
 
   @override
   State<StatusModelPage> createState() => _StatusModelPageState();
@@ -15,16 +20,16 @@ class StatusModelPage extends StatefulWidget {
 
 class _StatusModelPageState extends State<StatusModelPage> {
   Future<List<StatusModel>> fetchStatus(CookieRequest request) async {
-    final username = request.jsonData['username'];
-    final response = await request.get('http://127.0.0.1:8000/userprofile/profile/$username/status/');
+    final response = await request.get(
+      widget.username != null
+          ? 'http://127.0.0.1:8000/userprofile/profile/${widget.username}/status/'
+          : 'http://127.0.0.1:8000/userprofile/profile/${request.jsonData['username']}/status/',
+    );
     var data = response;
-
-    print(data);
 
     List<StatusModel> listStatus = [];
     for (var d in data) {
       if (d != null) {
-        print(d);
         listStatus.add(StatusModel.fromJson(d));
       }
     }
@@ -34,22 +39,18 @@ class _StatusModelPageState extends State<StatusModelPage> {
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
+    final isOwnProfile = widget.username == null || 
+                        widget.username == request.jsonData['username'];
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Status Entry List'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const AddStatusScreen()),
-              );
-            },
-          ),
-        ],
+        title: Text(
+          isOwnProfile ? 'My Status' : "${widget.username}'s Status",
+          style: const TextStyle(color: Colors.white),
+        ),
+        backgroundColor: const Color(0xFF8B4513),
       ),
-      drawer: const LeftDrawer(),
+      drawer: isOwnProfile ? const LeftDrawer() : null,
       body: FutureBuilder(
         future: fetchStatus(request),
         builder: (context, AsyncSnapshot snapshot) {
@@ -65,7 +66,7 @@ class _StatusModelPageState extends State<StatusModelPage> {
           } else if (!snapshot.hasData || snapshot.data.isEmpty) {
             return const Center(
               child: Text(
-                'Belum ada status pada profile anda.',
+                'Belum ada status pada profile.',
                 style: TextStyle(fontSize: 20, color: Color(0xff59A5D8)),
               ),
             );
@@ -110,7 +111,7 @@ class _StatusModelPageState extends State<StatusModelPage> {
           }
         },
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: isOwnProfile ? FloatingActionButton(
         onPressed: () {
           Navigator.push(
             context,
@@ -119,7 +120,7 @@ class _StatusModelPageState extends State<StatusModelPage> {
         },
         child: const Icon(Icons.add),
         backgroundColor: const Color(0xFF8B4513),
-      ),
+      ) : null,
     );
   }
 }
