@@ -59,10 +59,6 @@ class _MyHomePageState extends State<MyHomePage> {
       );
     } else if (index == 1) {
       // Product tab
-      // ScaffoldMessenger.of(context)
-      //   ..hideCurrentSnackBar  ()
-      //   ..showSnackBar(const SnackBar(
-      //       content: Text("[FEATURE] Product Page isn't implemented yet")));
       Navigator.pushReplacement(
         // Changed from push to pushReplacement
         context,
@@ -103,7 +99,8 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget _buildCategoryCard(BuildContext context, String category) {
+  Widget _buildCategoryCard(
+      BuildContext context, String category, int categoryId) {
     String imagePath;
     IconData categoryIcon;
 
@@ -111,35 +108,35 @@ class _MyHomePageState extends State<MyHomePage> {
     switch (category) {
       case 'Aksesoris':
         imagePath = 'assets/images/aksesoris.jpg';
-        categoryIcon = Icons.watch;  // Icon for accessories
+        categoryIcon = Icons.watch; // Icon for accessories
         break;
       case 'Anyaman Bambu':
         imagePath = 'assets/images/anyaman_bambu.jpeg';
-        categoryIcon = Icons.texture;  // Icon for woven bamboo
+        categoryIcon = Icons.texture; // Icon for woven bamboo
         break;
       case 'Batik Jepara':
         imagePath = 'assets/images/batik_jepara.jpg';
-        categoryIcon = Icons.palette;  // Icon for batik
+        categoryIcon = Icons.palette; // Icon for batik
         break;
       case 'Cenderamata':
         imagePath = 'assets/images/cenderamata.jpg';
-        categoryIcon = Icons.card_giftcard;  // Icon for souvenirs
+        categoryIcon = Icons.card_giftcard; // Icon for souvenirs
         break;
       case 'Fashion':
         imagePath = 'assets/images/fashion.jpg';
-        categoryIcon = Icons.checkroom;  // Icon for fashion
+        categoryIcon = Icons.checkroom; // Icon for fashion
         break;
       case 'Keramik':
         imagePath = 'assets/images/keramik.jpg';
-        categoryIcon = Icons.coffee;  // Icon for ceramics
+        categoryIcon = Icons.coffee; // Icon for ceramics
         break;
       case 'Patung':
         imagePath = 'assets/images/patung.jpg';
-        categoryIcon = Icons.architecture;  // Icon for statues
+        categoryIcon = Icons.architecture; // Icon for statues
         break;
       case 'Ukiran Kayu':
         imagePath = 'assets/images/ukiran_kayu.jpg';
-        categoryIcon = Icons.carpenter;  // Icon for wood carving
+        categoryIcon = Icons.carpenter; // Icon for wood carving
         break;
       default:
         imagePath = 'assets/images/background_auth.jpg';
@@ -154,10 +151,13 @@ class _MyHomePageState extends State<MyHomePage> {
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(const SnackBar(
-                content: Text("[FEATURE] Product Page isn't implemented yet")));
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ProductEntryPage(
+                      initialCategoryId: categoryId,
+                    )),
+          );
         },
         child: Container(
           width: 100,
@@ -176,7 +176,9 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(categoryIcon, size: 24, color: Colors.white),  // Using category-specific icon
+                  Icon(categoryIcon,
+                      size: 24,
+                      color: Colors.white), // Using category-specific icon
                   const SizedBox(height: 4),
                   Text(
                     category,
@@ -207,13 +209,15 @@ class _MyHomePageState extends State<MyHomePage> {
         imagePath = 'assets/images/mahaeswari-craft.jpg';
         break;
       case 'Pengrajin Tenun Unsiyyah':
-        imagePath = 'assets/images/tenun-unsiyyah.jpeg'; // Add appropriate image
+        imagePath =
+            'assets/images/tenun-unsiyyah.jpeg'; // Add appropriate image
         break;
       case 'Toko Adhesi Monel':
         imagePath = 'assets/images/toko-adhesi-monel.jpg';
         break;
       default:
-        imagePath = 'assets/images/background_auth.jpg'; // Use background_auth.jpg as fallback
+        imagePath =
+            'assets/images/background_auth.jpg'; // Use background_auth.jpg as fallback
     }
 
     return Card(
@@ -298,7 +302,8 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.black.withOpacity(0.6),
                     borderRadius: BorderRadius.circular(4),
@@ -355,7 +360,8 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget _buildActivityCard(String title, String imageUrl, String code, String discount) {
+  Widget _buildActivityCard(
+      String title, String imageUrl, String code, String discount) {
     return Container(
       width: 260,
       margin: const EdgeInsets.only(right: 16),
@@ -369,7 +375,8 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(12)),
               child: Image.asset(
                 imageUrl,
                 height: 140,
@@ -396,7 +403,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
                           color: Colors.grey.shade200,
                           borderRadius: BorderRadius.circular(4),
@@ -433,9 +441,10 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget _buildActivityCardWide(String title, String imageUrl, String code, String discount) {
+  Widget _buildActivityCardWide(
+      String title, String imageUrl, String code, String discount) {
     return Container(
-      width: 300,  // Wider card
+      width: 300, // Wider card
       margin: const EdgeInsets.only(right: 16),
       child: Card(
         elevation: 2,
@@ -447,12 +456,13 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(12)),
               child: Stack(
                 children: [
                   Image.asset(
                     imageUrl,
-                    height: 160,  // Taller image
+                    height: 160, // Taller image
                     width: double.infinity,
                     fit: BoxFit.cover,
                   ),
@@ -460,7 +470,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     top: 12,
                     right: 12,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: Colors.red,
                         borderRadius: BorderRadius.circular(4),
@@ -485,14 +496,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   Text(
                     title,
                     style: const TextStyle(
-                      fontSize: 16,  // Larger font
+                      fontSize: 16, // Larger font
                       fontWeight: FontWeight.bold,
                       height: 1.2,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.green.shade50,
                       borderRadius: BorderRadius.circular(4),
@@ -515,9 +527,10 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget _buildActivityCardCompact(String title, String imageUrl, String code, String discount) {
+  Widget _buildActivityCardCompact(
+      String title, String imageUrl, String code, String discount) {
     return Container(
-      width: 200,  // Narrower card
+      width: 200, // Narrower card
       margin: const EdgeInsets.only(right: 16),
       child: Card(
         elevation: 2,
@@ -529,12 +542,13 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(12)),
               child: Stack(
                 children: [
                   Image.asset(
                     imageUrl,
-                    height: 120,  // Shorter image
+                    height: 120, // Shorter image
                     width: double.infinity,
                     fit: BoxFit.cover,
                   ),
@@ -554,7 +568,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     bottom: 8,
                     left: 8,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
                         color: Colors.red,
                         borderRadius: BorderRadius.circular(4),
@@ -580,7 +595,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   Text(
                     title,
                     style: const TextStyle(
-                      fontSize: 12,  // Smaller font
+                      fontSize: 12, // Smaller font
                       fontWeight: FontWeight.bold,
                       height: 1.2,
                     ),
@@ -602,7 +617,8 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget _buildSmallFeatureItem(String title, IconData icon, Color bgColor, Color iconColor) {
+  Widget _buildSmallFeatureItem(
+      String title, IconData icon, Color bgColor, Color iconColor) {
     return Container(
       width: 120,
       margin: const EdgeInsets.only(right: 16),
@@ -761,11 +777,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       TextButton(
                         onPressed: () {
-                          ScaffoldMessenger.of(context)
-                            ..hideCurrentSnackBar()
-                            ..showSnackBar(const SnackBar(
-                              content: Text("[FEATURE] Product Categories isn't implemented yet"),
-                            ));
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const ProductEntryPage()),
+                          );
                         },
                         child: const Text('Show More'),
                       ),
@@ -777,14 +793,14 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: ListView(
                       scrollDirection: Axis.horizontal,
                       children: [
-                        _buildCategoryCard(context, 'Ukiran Kayu'),
-                        _buildCategoryCard(context, 'Anyaman Bambu'),
-                        _buildCategoryCard(context, 'Patung'),
-                        _buildCategoryCard(context, 'Cenderamata'),
-                        _buildCategoryCard(context, 'Aksesoris'),
-                        _buildCategoryCard(context, 'Fashion'),
-                        _buildCategoryCard(context, 'Keramik'),
-                        _buildCategoryCard(context, 'Batik Jepara'),
+                        _buildCategoryCard(context, 'Ukiran Kayu', 1),
+                        _buildCategoryCard(context, 'Anyaman Bambu', 2),
+                        _buildCategoryCard(context, 'Patung', 3),
+                        _buildCategoryCard(context, 'Cenderamata', 4),
+                        _buildCategoryCard(context, 'Aksesoris', 5),
+                        _buildCategoryCard(context, 'Fashion', 6),
+                        _buildCategoryCard(context, 'Keramik', 7),
+                        _buildCategoryCard(context, 'Batik Jepara', 8),
                       ],
                     ),
                   ),
@@ -814,7 +830,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           ScaffoldMessenger.of(context)
                             ..hideCurrentSnackBar()
                             ..showSnackBar(const SnackBar(
-                              content: Text("[FEATURE] Affiliate Stores isn't implemented yet"),
+                              content: Text(
+                                  "[FEATURE] Affiliate Stores isn't implemented yet"),
                             ));
                         },
                         child: const Text('Show More'),

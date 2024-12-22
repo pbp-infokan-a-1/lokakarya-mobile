@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:lokakarya_mobile/models/category.dart';
 import 'package:lokakarya_mobile/models/product_entry.dart';
+import 'package:lokakarya_mobile/models/rating.dart';
+import 'package:lokakarya_mobile/models/store_entry.dart';
 
 enum SortOption {
   Category,
@@ -11,35 +16,41 @@ enum SortOption {
 
 class ProductEntryProvider with ChangeNotifier {
   List<ProductEntry> _products = [];
-  List<ProductEntry> _filteredProducts = [];
+  List<StoreEntry> _allStores = [];
   String _searchQuery = '';
-  int? _selectedCategoryId;
+  Map<String, ProductEntry> _productDetails = {};
+  Set<int> _selectedCategoryIds = {};
   SortOption? _selectedSortOption;
   bool _isLoading = false;
   String? _error;
 
+  // Getters
   List<ProductEntry> get products => _products;
   bool get isLoading => _isLoading;
   String? get error => _error;
   String get searchQuery => _searchQuery;
-  int? get selectedCategoryId => _selectedCategoryId;
+  Set<int> get selectedCategoryIds => _selectedCategoryIds;
   SortOption? get selectedSortOption => _selectedSortOption;
 
+  // Filtered and Sorted Products
   List<ProductEntry> get filteredProducts {
     List<ProductEntry> tempProducts = _products;
 
+    // Apply Search Filter
     if (_searchQuery.isNotEmpty) {
       tempProducts = tempProducts.where((product) {
         return product.fields.name.toLowerCase().contains(_searchQuery);
       }).toList();
     }
 
-    if (_selectedCategoryId != null) {
+    // Apply Category Filter (OR Logic)
+    if (_selectedCategoryIds.isNotEmpty) {
       tempProducts = tempProducts.where((product) {
-        return product.fields.category.pk == _selectedCategoryId;
+        return _selectedCategoryIds.contains(product.fields.category.pk);
       }).toList();
     }
 
+    // Apply Sorting
     if (_selectedSortOption != null) {
       switch (_selectedSortOption!) {
         case SortOption.Category:
@@ -62,11 +73,15 @@ class ProductEntryProvider with ChangeNotifier {
           tempProducts.sort((a, b) => b.fields.name.compareTo(a.fields.name));
           break;
       }
+    } else {
+      // Default Sorting: By Primary Key
+      tempProducts.sort((a, b) => a.pk.compareTo(b.pk));
     }
 
     return tempProducts;
   }
 
+  // Fetch Products from Backend
   Future<void> fetchProducts() async {
     _isLoading = true;
     _error = null;
@@ -95,23 +110,108 @@ class ProductEntryProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // Update Search Query
   void updateSearchQuery(String query) {
     _searchQuery = query.toLowerCase();
     notifyListeners();
   }
 
-  void clearSearchQuery() {
-    _searchQuery = '';
+  // Update Selected Categories (Multiple)
+  void setSelectedCategories(Set<int> categoryIds) {
+    _selectedCategoryIds = categoryIds;
     notifyListeners();
   }
 
-  void setSelectedCategory(int? categoryId) {
-    _selectedCategoryId = categoryId;
+  // Toggle Category Selection
+  void toggleCategorySelection(int categoryId) {
+    if (_selectedCategoryIds.contains(categoryId)) {
+      _selectedCategoryIds.remove(categoryId);
+    } else {
+      _selectedCategoryIds.add(categoryId);
+    }
     notifyListeners();
   }
 
+  // Update Sort Option (Single)
   void setSortOption(SortOption? option) {
     _selectedSortOption = option;
     notifyListeners();
+  }
+
+  List<StoreEntry> getStoresForProduct(ProductEntry product) {
+    for (StoreEntry elemen in product.fields.store) {
+      _allStores.add(elemen);
+    }
+    return _allStores;
+  }
+
+  // Retrieve All Unique Categories
+  List<Category> getAllCategories() {
+    final categories = _products.map((p) => p.fields.category).toSet().toList();
+    categories.sort((a, b) => a.fields.name.compareTo(b.fields.name));
+    return categories;
+  }
+
+  // Edit a Review
+  Future<void> editReview(
+      String productId, int reviewId, int rating, String reviewText) async {
+    try {
+      final response = await http.put(
+        Uri.parse(
+            'http://127.0.0.1:8000/api/products/$productId/edit_reviews/$reviewId/'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'rating': rating,
+          'review': reviewText,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final responseBody = response.body;
+        final dynamic parsedJson;
+
+        try {
+          parsedJson = jsonDecode(responseBody);
+        } catch (e) {
+          throw Exception('Invalid JSON format for edited review.');
+        }
+
+        final updatedReview = Rating.fromJson(parsedJson);
+
+        // Update the review in the product details
+        if (_productDetails.containsKey(productId)) {
+          final product = _productDetails[productId]!;
+          final index = product.fields.ratings
+              .indexWhere((r) => r.pk == updatedReview.pk);
+          if (index != -1) {
+            product.fields.ratings[index] = updatedReview;
+
+            // Recalculate average rating
+            double totalRating = 0;
+            for (var r in product.fields.ratings) {
+              totalRating += r.fields.rating;
+            }
+            product.fields.averageRating =
+                totalRating / product.fields.numReviews;
+
+            notifyListeners();
+          }
+        }
+      } else {
+        // Handle error response
+        String errorMsg;
+        try {
+          final errorJson = jsonDecode(response.body);
+          errorMsg = errorJson['error'] ?? 'Unknown error';
+        } catch (e) {
+          errorMsg = response.body;
+        }
+        throw Exception('Failed to edit review: $errorMsg');
+      }
+    } catch (e) {
+      throw Exception('An error occurred while editing review: $e');
+    }
   }
 }
