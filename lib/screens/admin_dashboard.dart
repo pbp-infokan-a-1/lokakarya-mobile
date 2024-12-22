@@ -15,7 +15,7 @@ class AdminDashboardPage extends StatefulWidget {
 class _AdminDashboardPageState extends State<AdminDashboardPage> {
   Future<List<ProductEntry>> fetchProducts(CookieRequest request) async {
     try {
-      final response = await request.get('http://127.0.0.1:8000/flutterproducts/');
+      final response = await request.get('http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/flutterproducts/');
       print('Raw API Response: $response'); // Debug print
       
       if (response == null) {
@@ -43,7 +43,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
 
 Future<List<storeEntry.StoreEntry>> fetchStores(CookieRequest request) async {
   try {
-    final response = await request.get('http://127.0.0.1:8000/stores/');
+    final response = await request.get('http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/stores/');
     print('Raw API Response: $response'); // Debug print
 
     // Validate response and extract the 'stores' key

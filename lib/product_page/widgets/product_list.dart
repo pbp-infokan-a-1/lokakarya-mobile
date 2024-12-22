@@ -79,7 +79,7 @@ class _ProductListState extends State<ProductList> with FavoriteMixin {
   }
 
   Widget _buildProductCard(BuildContext context, ProductEntry product) {
-    const String BASE_URL = 'http://127.0.0.1:8000/static/';
+    const String BASE_URL = 'http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/static/';
     final bool isFavorite = favoriteProductIds.contains(product.pk.toString());
 
     return Padding(

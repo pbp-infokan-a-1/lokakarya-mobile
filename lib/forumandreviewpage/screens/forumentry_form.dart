@@ -141,7 +141,7 @@ class _ForumEntryFormPageState extends State<ForumEntryFormPage> {
   Future<void> _updateForum(CookieRequest request) async {
     try {
       final response = await request.post(
-        'http://127.0.0.1:8000/edit/${widget.forum!.pk}/',
+        'http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/edit/${widget.forum!.pk}/',
         jsonEncode(<String, String>{
           'title': _title,
           'content': _content,

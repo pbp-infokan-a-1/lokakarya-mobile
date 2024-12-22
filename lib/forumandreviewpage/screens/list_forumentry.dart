@@ -23,7 +23,7 @@ class _ForumEntryPageState extends State<ForumEntryPage> {
   Future<List<PostForum>> fetchPostForum(CookieRequest request) async {
     try {
       final response = await request
-          .get('http://127.0.0.1:8000/json/'); // Ganti IP sesuai server
+          .get('http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/json/'); // Ganti IP sesuai server
       List<PostForum> listPostForum = [];
       for (var d in response) {
         if (d != null) {
@@ -160,7 +160,7 @@ class _ForumEntryPageState extends State<ForumEntryPage> {
   Future<void> _deleteForum(String forumId) async {
     final request = context.read<CookieRequest>();
     final response = await request.post(
-      'http://127.0.0.1:8000/delete/$forumId/',
+      'http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/delete/$forumId/',
       {}, // Payload kosong untuk DELETE
     );
 
@@ -208,7 +208,7 @@ class _ForumEntryPageState extends State<ForumEntryPage> {
   Future<void> _upvoteForum(String forumId) async {
     final request = context.read<CookieRequest>();
     final response = await request.post(
-      'http://127.0.0.1:8000/upvote/$forumId/',
+      'http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/upvote/$forumId/',
       {}, // Payload kosong untuk POST
     );
 

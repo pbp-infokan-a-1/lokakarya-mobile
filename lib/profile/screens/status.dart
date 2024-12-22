@@ -22,8 +22,8 @@ class _StatusModelPageState extends State<StatusModelPage> {
   Future<List<StatusModel>> fetchStatus(CookieRequest request) async {
     final response = await request.get(
       widget.username != null
-          ? 'http://127.0.0.1:8000/userprofile/profile/${widget.username}/status/'
-          : 'http://127.0.0.1:8000/userprofile/profile/${request.jsonData['username']}/status/',
+          ? 'http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/userprofile/profile/${widget.username}/status/'
+          : 'http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/userprofile/profile/${request.jsonData['username']}/status/',
     );
     var data = response;
 

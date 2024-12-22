@@ -32,7 +32,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
 
       // Fetch favorites
       final favoritesResponse =
-          await request.get('http://127.0.0.1:8000/favourites/json/');
+          await request.get('http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/favourites/json/');
 
       // Parse favorites response
       Map<String, dynamic> favoritesData;
@@ -56,7 +56,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
 
       // Fetch all products
       final productsResponse = await http.get(
-        Uri.parse('http://127.0.0.1:8000/flutterproducts/'),
+        Uri.parse('http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/flutterproducts/'),
         headers: {
           'Cookie': request.cookies.toString(),
           'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
       final request = context.read<CookieRequest>();
 
       final response = await request.post(
-        'http://127.0.0.1:8000/favourites/remove/',
+        'http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/favourites/remove/',
         jsonEncode({
           "product_id": productId,
         }),
@@ -123,7 +123,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
 
   @override
   Widget build(BuildContext context) {
-    const String baseUrl = 'http://127.0.0.1:8000/static/';
+    const String baseUrl = 'http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/static/';
 
     return Scaffold(
       appBar: AppBar(

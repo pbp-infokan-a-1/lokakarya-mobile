@@ -54,10 +54,6 @@ class BubbleTabBar extends StatelessWidget {
                 icon: Icon(Icons.login),
                 label: 'Login',
               ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_bag),
-                label: 'Products',
-              ),
             ],
     );
   }
