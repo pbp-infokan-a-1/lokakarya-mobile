@@ -1,20 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
 import 'package:lokakarya_mobile/auth/screens/auth_screen.dart';
-import 'package:lokakarya_mobile/forumandreviewpage/screens/list_forumentry.dart';
 import 'package:lokakarya_mobile/widgets/bubbletab.dart';
 import 'package:lokakarya_mobile/product_page/screens/list_products.dart';
 import 'package:lokakarya_mobile/profile/screens/profile.dart';
 import 'package:lokakarya_mobile/stores/screens/stores_page.dart';
 import 'package:lokakarya_mobile/widgets/left_drawer.dart';
-import 'package:lokakarya_mobile/favorites/screens/favorites_page.dart';
 import 'package:provider/provider.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
-import 'package:lokakarya_mobile/product_page/screens/product_detail.dart';
-import 'package:lokakarya_mobile/stores/screens/stores_detail.dart';
-import 'package:lokakarya_mobile/profile/screens/other_user_profile.dart';
-import 'package:lokakarya_mobile/models/product_entry.dart';
-import 'package:lokakarya_mobile/stores/models/stores_entry.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({super.key});
@@ -67,21 +60,52 @@ class _MyHomePageState extends State<MyHomePage> {
         MaterialPageRoute(builder: (context) => const ProfileScreen()),
       );
     } else if (index == 1) {
+      // Product tab
+      // ScaffoldMessenger.of(context)
+      //   ..hideCurrentSnackBar  ()
+      //   ..showSnackBar(const SnackBar(
+      //       content: Text("[FEATURE] Product Page isn't implemented yet")));
       Navigator.pushReplacement(
         // Changed from push to pushReplacement
         context,
         MaterialPageRoute(builder: (context) => const ProductEntryPage()),
       );
-    } else if (index == 2) {
-      Navigator.pushReplacement(
-        // Changed from push to pushReplacement
-        context,
-        MaterialPageRoute(builder: (context) => const ForumEntryPage()),
-      );
     }
   }
 
-  Widget _buildCategoryCard(BuildContext context, String category, int categoryId) {
+  Widget _buildFeatureCard(BuildContext context, String title, IconData icon) {
+    return Card(
+      elevation: 4,
+      child: InkWell(
+        onTap: () {
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(SnackBar(
+                content: Text("[FEATURE] $title isn't implemented yet")));
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, size: 40, color: const Color(0xFF8B4513)),
+              const SizedBox(height: 8),
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCategoryCard(BuildContext context, String category) {
     String imagePath;
     IconData categoryIcon;
 
@@ -132,13 +156,12 @@ class _MyHomePageState extends State<MyHomePage> {
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () {
-         Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ProductEntryPage(
-                      initialCategoryId: categoryId,
-                    )),
-          );
+         Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ProductEntryPage(),
+                ),
+              );
         },
         child: Container(
           width: 100,
@@ -205,10 +228,11 @@ class _MyHomePageState extends State<MyHomePage> {
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const StoresPage()),
-          );
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const StoresPage()),
+                );
         },
         child: Container(
           height: 80, // Fixed height for store cards
@@ -241,6 +265,343 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPromoBanner(String tag, String title, String imageUrl) {
+    return Container(
+      height: 180,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        image: DecorationImage(
+          image: AssetImage(imageUrl),
+          fit: BoxFit.cover,
+          colorFilter: ColorFilter.mode(
+            Colors.black.withOpacity(0.3),
+            BlendMode.darken,
+          ),
+        ),
+      ),
+      child: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.6),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(
+                    tag,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildServiceItem(String title, IconData icon) {
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.green.shade50,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(
+            icon,
+            color: Colors.green,
+            size: 24,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          title,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            fontSize: 12,
+            height: 1.2,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildActivityCard(String title, String imageUrl, String code, String discount) {
+    return Container(
+      width: 260,
+      margin: const EdgeInsets.only(right: 16),
+      child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+              child: Image.asset(
+                imageUrl,
+                height: 140,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                color: Colors.black.withOpacity(0.1),
+                colorBlendMode: BlendMode.darken,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      height: 1.2,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Row(
+                          children: [
+                            Text(
+                              'Pakai kode: $code',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade700,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        discount,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActivityCardWide(String title, String imageUrl, String code, String discount) {
+    return Container(
+      width: 300,  // Wider card
+      margin: const EdgeInsets.only(right: 16),
+      child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+              child: Stack(
+                children: [
+                  Image.asset(
+                    imageUrl,
+                    height: 160,  // Taller image
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
+                  Positioned(
+                    top: 12,
+                    right: 12,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        discount,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 16,  // Larger font
+                      fontWeight: FontWeight.bold,
+                      height: 1.2,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.green.shade50,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      'Kode: $code',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.green.shade700,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActivityCardCompact(String title, String imageUrl, String code, String discount) {
+    return Container(
+      width: 200,  // Narrower card
+      margin: const EdgeInsets.only(right: 16),
+      child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+              child: Stack(
+                children: [
+                  Image.asset(
+                    imageUrl,
+                    height: 120,  // Shorter image
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          Colors.black.withOpacity(0.7),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 8,
+                    left: 8,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        discount,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 12,  // Smaller font
+                      fontWeight: FontWeight.bold,
+                      height: 1.2,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Gunakan: $code',
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -294,41 +655,15 @@ class _MyHomePageState extends State<MyHomePage> {
       );
 
       if (response != null) {
-        // Convert the response data to match the expected models
-        final products = (response['products'] as List?)?.map((product) {
-          try {
-            return ProductEntry.fromJson(product);
-          } catch (e) {
-            print('Error parsing product: $e');
-            return null;
-          }
-        }).whereType<ProductEntry>().toList() ?? [];
-
-        final stores = (response['stores'] as List?)?.map((store) {
-          try {
-            return StoresModel.fromJson(store);
-          } catch (e) {
-            print('Error parsing store: $e');
-            return null;
-          }
-        }).whereType<StoresModel>().toList() ?? [];
-
-        final profiles = response['profiles'] as List? ?? [];
-
         // Show search results in a modal bottom sheet
         if (!mounted) return;
         showModalBottomSheet(
           context: context,
           isScrollControlled: true,
-          builder: (context) => _buildSearchResults({
-            'products': products,
-            'stores': stores,
-            'profiles': profiles,
-          }),
+          builder: (context) => _buildSearchResults(response),
         );
       }
-    } catch (e, stackTrace) {
-      print('Search error: $e\n$stackTrace');
+    } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error performing search: $e')),
@@ -381,20 +716,15 @@ class _MyHomePageState extends State<MyHomePage> {
                     ...List.generate(
                       results['products'].length,
                       (index) => _buildSearchResultTile(
-                        (results['products'][index] as ProductEntry).fields.name,
-                        (results['products'][index] as ProductEntry).fields.description,
+                        results['products'][index]['name'] ?? 'Unknown Product',
+                        'Product',
                         Icons.shopping_bag,
-                        () {
-                          Navigator.pop(context);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ProductDetailPage(
-                                product: results['products'][index] as ProductEntry,
-                              ),
-                            ),
-                          );
-                        },
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ProductEntryPage(),
+                          ),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -412,21 +742,15 @@ class _MyHomePageState extends State<MyHomePage> {
                     ...List.generate(
                       results['stores'].length,
                       (index) => _buildSearchResultTile(
-                        (results['stores'][index] as StoresModel).nama,
+                        results['stores'][index]['name'] ?? 'Unknown Store',
                         'Store',
                         Icons.store,
-                        () {
-                          Navigator.pop(context);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => StoresProductDetail(
-                                store: results['stores'][index] as StoresModel,
-                                isSuperuser: false,
-                              ),
-                            ),
-                          );
-                        },
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const StoresPage(),
+                          ),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -445,19 +769,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       results['profiles'].length,
                       (index) => _buildSearchResultTile(
                         results['profiles'][index]['username'] ?? 'Unknown User',
-                        results['profiles'][index]['bio'] ?? '',
+                        'Profile',
                         Icons.person,
-                        () {
-                          Navigator.pop(context); // Close search results
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => OtherUserProfileScreen(
-                                username: results['profiles'][index]['username'],
-                              ),
-                            ),
-                          );
-                        },
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ProfileScreen(),
+                          ),
+                        ),
                       ),
                     ),
                   ],
@@ -604,69 +923,29 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: ListView(
                       scrollDirection: Axis.horizontal,
                       children: [
-                        InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const ProductEntryPage(),
-                              ),
-                            );
-                          },
-                          child: _buildSmallFeatureItem(
-                            'Product',
-                            Icons.shopping_bag,
-                            Colors.brown.shade50,
-                            const Color(0xFF8B4513),
-                          ),
+                        _buildSmallFeatureItem(
+                          'Product',
+                          Icons.shopping_bag,
+                          Colors.brown.shade50,
+                          const Color(0xFF8B4513),
                         ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const StoresPage(),
-                              ),
-                            );
-                          },
-                          child: _buildSmallFeatureItem(
-                            'Store',
-                            Icons.store,
-                            Colors.green.shade50,
-                            Colors.green,
-                          ),
+                        _buildSmallFeatureItem(
+                          'Store',
+                          Icons.store,
+                          Colors.green.shade50,
+                          Colors.green,
                         ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const ForumEntryPage(),
-                              ),
-                            );
-                          },
-                          child: _buildSmallFeatureItem(
-                            'Forum',
-                            Icons.forum,
-                            Colors.brown.shade100,
-                            const Color(0xFF8B4513),
-                          ),
+                        _buildSmallFeatureItem(
+                          'Forum',
+                          Icons.forum,
+                          Colors.brown.shade100,
+                          const Color(0xFF8B4513),
                         ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const FavoritesPage(),
-                              ),
-                            );
-                          },
-                          child: _buildSmallFeatureItem(
-                            'Favorites',
-                            Icons.favorite,
-                            Colors.red.shade50,
-                            Colors.red,
-                          ),
+                        _buildSmallFeatureItem(
+                          'Favorites',
+                          Icons.favorite,
+                          Colors.red.shade50,
+                          Colors.red,
                         ),
                       ],
                     ),
@@ -694,12 +973,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ProductEntryPage(),
-                            ),
-                          );
+                          ScaffoldMessenger.of(context)
+                            ..hideCurrentSnackBar()
+                            ..showSnackBar(const SnackBar(
+                              content: Text("[FEATURE] Product Categories isn't implemented yet"),
+                            ));
                         },
                         child: const Text('Show More'),
                       ),
@@ -711,14 +989,14 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: ListView(
                       scrollDirection: Axis.horizontal,
                       children: [
-                        _buildCategoryCard(context, 'Ukiran Kayu', 1),
-                        _buildCategoryCard(context, 'Anyaman Bambu', 2),
-                        _buildCategoryCard(context, 'Patung', 3),
-                        _buildCategoryCard(context, 'Cenderamata', 4),
-                        _buildCategoryCard(context, 'Aksesoris', 5),
-                        _buildCategoryCard(context, 'Fashion', 6),
-                        _buildCategoryCard(context, 'Keramik', 7),
-                        _buildCategoryCard(context, 'Batik Jepara', 8),
+                        _buildCategoryCard(context, 'Ukiran Kayu'),
+                        _buildCategoryCard(context, 'Anyaman Bambu'),
+                        _buildCategoryCard(context, 'Patung'),
+                        _buildCategoryCard(context, 'Cenderamata'),
+                        _buildCategoryCard(context, 'Aksesoris'),
+                        _buildCategoryCard(context, 'Fashion'),
+                        _buildCategoryCard(context, 'Keramik'),
+                        _buildCategoryCard(context, 'Batik Jepara'),
                       ],
                     ),
                   ),
@@ -747,10 +1025,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => const StoresPage(),
-                            ),
-                          );
+                            MaterialPageRoute(builder: (context) => const StoresPage()),
+                              );
                         },
                         child: const Text('Show More'),
                       ),
