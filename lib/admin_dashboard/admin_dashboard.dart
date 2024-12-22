@@ -1,128 +1,419 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
+import 'package:provider/provider.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:lokakarya_mobile/models/product_entry.dart';
+import 'package:lokakarya_mobile/models/store_entry.dart' as storeEntry;
+import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
+import 'package:lokakarya_mobile/widgets/product_form.dart';
+import 'package:lokakarya_mobile/widgets/store_form.dart';
 
-class AdminDashboard extends StatefulWidget {
+class AdminDashboardPage extends StatefulWidget {
+  const AdminDashboardPage({super.key});
+
   @override
-  _AdminDashboardState createState() => _AdminDashboardState();
+  State<AdminDashboardPage> createState() => _AdminDashboardPageState();
 }
 
-class _AdminDashboardState extends State<AdminDashboard> {
-  List<Map<String, dynamic>> products = [];
-  bool isLoading = false;
+class _AdminDashboardPageState extends State<AdminDashboardPage> {
+  late Future<List<dynamic>> _fetchDataFuture;
 
   @override
+  Future<List<ProductEntry>> fetchProducts(CookieRequest request) async {
+    try {
+      final response = await request.get('http://127.0.0.1:8000/flutterproducts/');
+      print('Raw API Response: $response');
+      
+      if (response == null) {
+        throw Exception('Response is null');
+      }
+
+      if (response is! List) {
+        print('Response type: ${response.runtimeType}');
+        throw Exception('Expected List but got ${response.runtimeType}');
+      }
+
+      return List<ProductEntry>.from(
+        response.map((product) {
+          print('Processing product: $product');
+          return ProductEntry.fromJson(product);
+        })
+      );
+    } catch (e, stackTrace) {
+      print('Error fetching products: $e');
+      print('Stack trace: $stackTrace');
+      throw Exception('Failed to fetch products: $e');
+    }
+  }
+
+  Future<List<storeEntry.StoreEntry>> fetchStores(CookieRequest request) async {
+    try {
+      final response = await request.get('http://127.0.0.1:8000/stores/');
+      print('Raw API Response: $response');
+
+      if (response == null || response['stores'] == null) {
+        throw Exception('Invalid response: No stores data found');
+      }
+
+      final storesList = response['stores'];
+      if (storesList is! List) {
+        throw Exception('Expected List but got ${storesList.runtimeType}');
+      }
+
+      return List<storeEntry.StoreEntry>.from(
+        storesList.map((store) => storeEntry.StoreEntry(
+          model: storeEntry.Model.STOREPAGE_TOKO,
+          pk: store['id'],
+          fields: storeEntry.Fields(
+            nama: store['nama'],
+            hariBuka: storeEntry.hariBukaValues.map[store['hari_buka']] ?? storeEntry.HariBuka.SENIN_JUMAT,
+            alamat: store['alamat'],
+            email: store['email'],
+            telepon: store['telepon'],
+            image: store['image_url'],
+            gmapsLink: store['gmaps_link'],
+          ),
+        )),
+      );
+    } catch (e, stackTrace) {
+      print('Error fetching stores: $e');
+      print('Stack trace: $stackTrace');
+      throw Exception('Failed to fetch stores: $e');
+    }
+  }
+
+  Future<void> addProduct(CookieRequest request, ProductEntry product) async {
+    try {
+      final response = await request.post('http://127.0.0.1:8000/add_product/', {
+        'name': product.fields.name,
+        'min_price': product.fields.minPrice.toString(),
+        'max_price': product.fields.maxPrice.toString(),
+        'description': product.fields.description,
+        'category': product.fields.category.toString(),
+        'store': product.fields.store.join(','),
+        'image': product.fields.image ?? '',
+      });
+      print('Add Product Response: $response');
+    } catch (e, stackTrace) {
+      print('Error adding product: $e');
+      print('Stack trace: $stackTrace');
+      throw Exception('Failed to add product: $e');
+    }
+  }
+
+  Future<void> updateProduct(CookieRequest request, ProductEntry product) async {
+    try {
+      final response = await request.post('http://127.0.0.1:8000/edit_product/${product.pk}/', {
+        'name': product.fields.name,
+        'min_price': product.fields.minPrice.toString(),
+        'max_price': product.fields.maxPrice.toString(),
+        'description': product.fields.description,
+        'category': product.fields.category.toString(),
+        'store': product.fields.store.join(','),
+        'image': product.fields.image ?? '',
+      });
+      print('Update Product Response: $response');
+    } catch (e, stackTrace) {
+      print('Error updating product: $e');
+      print('Stack trace: $stackTrace');
+      throw Exception('Failed to update product: $e');
+    }
+  }
+
+  Future<void> deleteProduct(CookieRequest request, String productId) async {
+    try {
+      final response = await request.post('http://127.0.0.1:8000/delete_product/$productId/', {});
+      print('Delete Product Response: $response');
+    } catch (e, stackTrace) {
+      print('Error deleting product: $e');
+      print('Stack trace: $stackTrace');
+      throw Exception('Failed to delete product: $e');
+    }
+  }
+
+  Future<void> addStore(CookieRequest request, storeEntry.StoreEntry store) async {
+    try {
+      final response = await request.post('http://127.0.0.1:8000/add_store/', {
+        'nama': store.fields.nama,
+        'hari_buka': store.fields.hariBuka.toString(),
+        'alamat': store.fields.alamat,
+        'email': store.fields.email,
+        'telepon': store.fields.telepon,
+        'image': store.fields.image ?? '',
+        'gmaps_link': store.fields.gmapsLink,
+      });
+      print('Add Store Response: $response');
+    } catch (e, stackTrace) {
+      print('Error adding store: $e');
+      print('Stack trace: $stackTrace');
+      throw Exception('Failed to add store: $e');
+    }
+  }
+
+  Future<void> updateStore(CookieRequest request, storeEntry.StoreEntry store) async {
+    try {
+      final response = await request.post('http://127.0.0.1:8000/edit_store/${store.pk}/', {
+        'nama': store.fields.nama,
+        'hari_buka': store.fields.hariBuka.toString(),
+        'alamat': store.fields.alamat,
+        'email': store.fields.email,
+        'telepon': store.fields.telepon,
+        'image': store.fields.image ?? '',
+        'gmaps_link': store.fields.gmapsLink,
+      });
+      print('Update Store Response: $response');
+    } catch (e, stackTrace) {
+      print('Error updating store: $e');
+      print('Stack trace: $stackTrace');
+      throw Exception('Failed to update store: $e');
+    }
+  }
+
+  Future<void> deleteStore(CookieRequest request, int storeId) async {
+    try {
+      final response = await request.post('http://127.0.0.1:8000/delete_store/$storeId/', {});
+      print('Delete Store Response: $response');
+    } catch (e, stackTrace) {
+      print('Error deleting store: $e');
+      print('Stack trace: $stackTrace');
+      throw Exception('Failed to delete store: $e');
+    }
+  }
+
   void initState() {
     super.initState();
-    loadInitialData();
+    final request = context.read<CookieRequest>();
+    _fetchDataFuture = Future.wait([fetchProducts(request), fetchStores(request)]);
   }
 
-  void loadInitialData() {
-    // Preload some local products for demonstration
-    products = [
-      {
-        "id": "1",
-        "name": "Product A",
-        "min_price": 10.0,
-        "max_price": 20.0,
-        "num_reviews": 5,
+  void _refreshData() {
+    setState(() {
+      final request = context.read<CookieRequest>();
+      _fetchDataFuture = Future.wait([fetchProducts(request), fetchStores(request)]);
+    });
+  }
+
+  // Your existing fetch methods remain the same
+
+  void _showAddDialog(BuildContext context, bool isProduct) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        if (isProduct) {
+          return ProductForm(
+            onSave: (product) async {
+              final request = context.read<CookieRequest>();
+              await addProduct(request, product);
+              _refreshData();
+            },
+          );
+        } else {
+          return StoreForm(
+            onSave: (store) async {
+              final request = context.read<CookieRequest>();
+              await addStore(request, store);
+              _refreshData();
+            },
+          );
+        }
       },
-      {
-        "id": "2",
-        "name": "Product B",
-        "min_price": 15.0,
-        "max_price": 25.0,
-        "num_reviews": 8,
-      }
-    ];
-    setState(() {});
+    );
   }
 
-  void addProduct(Map<String, dynamic> product) {
-    setState(() {
-      products.add(product);
-    });
+  void _showEditProductDialog(BuildContext context, ProductEntry product) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return ProductForm(
+          product: product,
+          onSave: (updatedProduct) async {
+            final request = context.read<CookieRequest>();
+            await updateProduct(request, updatedProduct);
+            _refreshData();
+          },
+        );
+      },
+    );
   }
 
-  void editProduct(String id, Map<String, dynamic> updatedProduct) {
-    setState(() {
-      final index = products.indexWhere((product) => product['id'] == id);
-      if (index != -1) {
-        products[index] = updatedProduct;
-      }
-    });
+  void _showEditStoreDialog(BuildContext context, storeEntry.StoreEntry store) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StoreForm(
+          store: store,
+          onSave: (updatedStore) async {
+            final request = context.read<CookieRequest>();
+            await updateStore(request, updatedStore);
+            _refreshData();
+          },
+        );
+      },
+    );
   }
 
-  void deleteProduct(String id) {
-    setState(() {
-      products.removeWhere((product) => product['id'] == id);
-    });
+  void _showDeleteConfirmation(BuildContext context, bool isProduct, dynamic item) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Confirm Delete'),
+        content: Text(
+          isProduct 
+              ? 'Are you sure you want to delete ${item.fields.name}?'
+              : 'Are you sure you want to delete ${item.fields.nama}?'
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              final request = context.read<CookieRequest>();
+              if (isProduct) {
+                await deleteProduct(request, item.pk);
+              } else {
+                await deleteStore(request, item.pk);
+              }
+              Navigator.pop(context);
+              _refreshData();
+            },
+            child: Text('Delete'),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+    final bool isSuperuser = authProvider.isSuperuser;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Admin Dashboard'),
-        backgroundColor: Colors.blueAccent,
+        title: const Text('Admin Dashboard'),
       ),
-      body: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
+      body: FutureBuilder(
+        future: _fetchDataFuture,
+        builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            final products = snapshot.data![0] as List<ProductEntry>;
+            final stores = snapshot.data![1] as List<storeEntry.StoreEntry>;
+            
+            return SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (_) => AddProductDialog(onSubmit: addProduct),
-                        );
-                      },
-                      child: Text('Add Product'),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Products',
+                          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                        ),
+                        if (isSuperuser)
+                          ElevatedButton.icon(
+                            onPressed: () => _showAddDialog(context, true),
+                            icon: const Icon(Icons.add),
+                            label: const Text('Add Product'),
+                          ),
+                      ],
                     ),
-                    SizedBox(height: 20),
-                    Text(
-                      'Products',
-                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     ListView.builder(
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       itemCount: products.length,
                       itemBuilder: (context, index) {
                         final product = products[index];
                         return Card(
                           child: ListTile(
-                            title: Text(product['name']),
+                            title: Text(product.fields.name),
                             subtitle: Text(
-                                'Min Price: ${product['min_price']} | Max Price: ${product['max_price']}'),
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                IconButton(
-                                  icon: Icon(Icons.edit),
-                                  onPressed: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (_) => EditProductDialog(
-                                        product: product,
-                                        onSubmit: (updatedProduct) =>
-                                            editProduct(product['id'], updatedProduct),
-                                      ),
-                                    );
-                                  },
-                                ),
-                                IconButton(
-                                  icon: Icon(Icons.delete),
-                                  onPressed: () {
-                                    deleteProduct(product['id']);
-                                  },
-                                ),
-                              ],
+                              'Min Price: ${product.fields.minPrice} | Max Price: ${product.fields.maxPrice}'
                             ),
+                            trailing: isSuperuser
+                                ? Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(Icons.edit),
+                                        onPressed: () => _showEditProductDialog(
+                                          context, 
+                                          product
+                                        ),
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(Icons.delete),
+                                        onPressed: () => _showDeleteConfirmation(
+                                          context,
+                                          true,
+                                          product
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : null,
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Stores',
+                          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                        ),
+                        if (isSuperuser)
+                          ElevatedButton.icon(
+                            onPressed: () => _showAddDialog(context, false),
+                            icon: const Icon(Icons.add),
+                            label: const Text('Add Store'),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: stores.length,
+                      itemBuilder: (context, index) {
+                        final store = stores[index];
+                        return Card(
+                          child: ListTile(
+                            title: Text(store.fields.nama),
+                            subtitle: Text('Open Days: ${store.fields.hariBuka}'),
+                            trailing: isSuperuser
+                                ? Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(Icons.edit),
+                                        onPressed: () => _showEditStoreDialog(
+                                          context,
+                                          store
+                                        ),
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(Icons.delete),
+                                        onPressed: () => _showDeleteConfirmation(
+                                          context,
+                                          false,
+                                          store
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : null,
                           ),
                         );
                       },
@@ -130,124 +421,10 @@ class _AdminDashboardState extends State<AdminDashboard> {
                   ],
                 ),
               ),
-            ),
-    );
-  }
-}
-
-class AddProductDialog extends StatelessWidget {
-  final Function(Map<String, dynamic>) onSubmit;
-
-  AddProductDialog({required this.onSubmit});
-
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController minPriceController = TextEditingController();
-  final TextEditingController maxPriceController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text('Add Product'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextField(
-            controller: nameController,
-            decoration: InputDecoration(labelText: 'Product Name'),
-          ),
-          TextField(
-            controller: minPriceController,
-            decoration: InputDecoration(labelText: 'Minimum Price'),
-            keyboardType: TextInputType.number,
-          ),
-          TextField(
-            controller: maxPriceController,
-            decoration: InputDecoration(labelText: 'Maximum Price'),
-            keyboardType: TextInputType.number,
-          ),
-        ],
+            );
+          }
+        },
       ),
-      actions: [
-        TextButton(
-          onPressed: () {
-            final product = {
-              "id": DateTime.now().millisecondsSinceEpoch.toString(),
-              "name": nameController.text,
-              "min_price": double.tryParse(minPriceController.text) ?? 0.0,
-              "max_price": double.tryParse(maxPriceController.text) ?? 0.0,
-              "num_reviews": 0,
-            };
-            onSubmit(product);
-            Navigator.pop(context);
-          },
-          child: Text('Add'),
-        ),
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text('Cancel'),
-        ),
-      ],
-    );
-  }
-}
-
-class EditProductDialog extends StatelessWidget {
-  final Map<String, dynamic> product;
-  final Function(Map<String, dynamic>) onSubmit;
-
-  EditProductDialog({required this.product, required this.onSubmit});
-
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController minPriceController = TextEditingController();
-  final TextEditingController maxPriceController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    nameController.text = product['name'];
-    minPriceController.text = product['min_price'].toString();
-    maxPriceController.text = product['max_price'].toString();
-
-    return AlertDialog(
-      title: Text('Edit Product'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextField(
-            controller: nameController,
-            decoration: InputDecoration(labelText: 'Product Name'),
-          ),
-          TextField(
-            controller: minPriceController,
-            decoration: InputDecoration(labelText: 'Minimum Price'),
-            keyboardType: TextInputType.number,
-          ),
-          TextField(
-            controller: maxPriceController,
-            decoration: InputDecoration(labelText: 'Maximum Price'),
-            keyboardType: TextInputType.number,
-          ),
-        ],
-      ),
-      actions: [
-        TextButton(
-          onPressed: () {
-            final updatedProduct = {
-              "id": product['id'],
-              "name": nameController.text,
-              "min_price": double.tryParse(minPriceController.text) ?? 0.0,
-              "max_price": double.tryParse(maxPriceController.text) ?? 0.0,
-              "num_reviews": product['num_reviews'],
-            };
-            onSubmit(updatedProduct);
-            Navigator.pop(context);
-          },
-          child: Text('Save'),
-        ),
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text('Cancel'),
-        ),
-      ],
     );
   }
 }
