@@ -7,6 +7,7 @@ import 'package:lokakarya_mobile/profile/screens/profile.dart';
 import 'package:lokakarya_mobile/stores/screens/stores_page.dart';
 import 'package:lokakarya_mobile/widgets/left_drawer.dart';
 import 'package:provider/provider.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({super.key});
@@ -644,6 +645,192 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  Future<void> _performSearch(String query) async {
+    if (query.isEmpty) return;
+
+    try {
+      final request = context.read<CookieRequest>();
+      final response = await request.get(
+        'http://127.0.0.1:8000/search_mobile/?q=$query',
+      );
+
+      if (response != null) {
+        // Show search results in a modal bottom sheet
+        if (!mounted) return;
+        showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          builder: (context) => _buildSearchResults(response),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error performing search: $e')),
+      );
+    }
+  }
+
+  Widget _buildSearchResults(Map<String, dynamic> results) {
+    return DraggableScrollableSheet(
+      initialChildSize: 0.9,
+      minChildSize: 0.5,
+      maxChildSize: 0.9,
+      builder: (_, controller) => Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Search Results',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'TTMoons',
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: ListView(
+                controller: controller,
+                children: [
+                  if (results['products'] != null && results['products'].isNotEmpty) ...[
+                    const Text(
+                      'Products',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'TTMoons',
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    ...List.generate(
+                      results['products'].length,
+                      (index) => _buildSearchResultTile(
+                        results['products'][index]['name'] ?? 'Unknown Product',
+                        'Product',
+                        Icons.shopping_bag,
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ProductEntryPage(),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                  if (results['stores'] != null && results['stores'].isNotEmpty) ...[
+                    const Text(
+                      'Stores',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'TTMoons',
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    ...List.generate(
+                      results['stores'].length,
+                      (index) => _buildSearchResultTile(
+                        results['stores'][index]['name'] ?? 'Unknown Store',
+                        'Store',
+                        Icons.store,
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const StoresPage(),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                  if (results['profiles'] != null && results['profiles'].isNotEmpty) ...[
+                    const Text(
+                      'Profiles',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'TTMoons',
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    ...List.generate(
+                      results['profiles'].length,
+                      (index) => _buildSearchResultTile(
+                        results['profiles'][index]['username'] ?? 'Unknown User',
+                        'Profile',
+                        Icons.person,
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ProfileScreen(),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                  if ((results['products']?.isEmpty ?? true) && 
+                      (results['stores']?.isEmpty ?? true) && 
+                      (results['profiles']?.isEmpty ?? true)) ...[
+                    const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: Text(
+                          'No results found',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSearchResultTile(
+    String title,
+    String subtitle,
+    IconData icon,
+    VoidCallback onTap,
+  ) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8),
+      child: ListTile(
+        leading: Icon(icon),
+        title: Text(
+          title,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
+        ),
+        subtitle: Text(
+          subtitle,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
+        ),
+        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+        onTap: onTap,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
@@ -668,6 +855,27 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Add Search Bar
+            Container(
+              padding: const EdgeInsets.all(16.0),
+              child: TextField(
+                onSubmitted: (value) => _performSearch(value),
+                decoration: InputDecoration(
+                  hintText: 'Search products, stores, or profiles...',
+                  prefixIcon: const Icon(Icons.search),
+                  suffixIcon: const Icon(Icons.keyboard_return),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide.none,
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey[200],
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                ),
+                textInputAction: TextInputAction.search,
+              ),
+            ),
+
             // Promo Banner Section
             Container(
               height: 180,
