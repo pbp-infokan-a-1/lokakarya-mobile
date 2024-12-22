@@ -33,38 +33,37 @@ class PostForum {
 }
 
 class Fields {
-    String title;
-    String content;
-    int author;
-    DateTime createdAt;
-    int totalUpvotes;
-    List<int> upvotes;
+  String title;
+  String content;
+  int author;
+  DateTime createdAt;
+  int totalUpvotes;
+  List<int> upvotes;
 
-    Fields({
-        required this.title,
-        required this.content,
-        required this.author,
-        required this.createdAt,
-        required this.totalUpvotes,
-        required this.upvotes,
-    });
+  Fields({
+    required this.title,
+    required this.content,
+    required this.author,
+    required this.createdAt,
+    required this.totalUpvotes,
+    required this.upvotes,
+  });
 
-    factory Fields.fromJson(Map<String, dynamic> json) => Fields(
+  factory Fields.fromJson(Map<String, dynamic> json) => Fields(
         title: json["title"],
         content: json["content"],
         author: json["author"],
         createdAt: DateTime.parse(json["created_at"]),
         totalUpvotes: json["total_upvotes"],
         upvotes: List<int>.from(json["upvotes"].map((x) => x)),
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "title": title,
         "content": content,
         "author": author,
         "created_at": createdAt.toIso8601String(),
         "total_upvotes": totalUpvotes,
         "upvotes": List<dynamic>.from(upvotes.map((x) => x)),
-    };
+      };
 }
-
