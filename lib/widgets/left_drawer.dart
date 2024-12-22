@@ -4,7 +4,7 @@ import 'package:lokakarya_mobile/product_page/screens/list_products.dart';
 import 'package:lokakarya_mobile/stores/screens/stores_page.dart';
 import 'package:provider/provider.dart';
 import 'package:lokakarya_mobile/auth/provider/auth_provider.dart';
-import 'package:lokakarya_mobile/home/menu.dart';
+import 'package:lokakarya_mobile/home/screens/menu.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:lokakarya_mobile/auth/screens/auth_screen.dart';
 
