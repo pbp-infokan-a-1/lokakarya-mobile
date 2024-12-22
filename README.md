@@ -1,6 +1,7 @@
 # LokaKarya - Aplikasi Informasi Kerajinan Tangan di Kota Jepara
 
 Tautan untuk menuju Lokakarya -> [http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/](http://belva-ghani-lokakarya.pbp.cs.ui.ac.id/)
+Tautan menuju video demo -> [https://youtu.be/QE8xsbePQgg]
 
 ## Nama-nama Anggota Kelompok
 - Muhammad Yahya Ayyas - 2306212083
